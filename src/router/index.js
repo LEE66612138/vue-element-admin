@@ -83,7 +83,7 @@ export const constantRoutes = [
         path: 'administrator',
         component: () => import('@/views/dashboard/administrator'),
         name: 'Administrator',
-        meta: { title: '管理员', icon: '', affix: true }
+        meta: { title: '管理员', icon: '', affix: false }
       }
     ]
   },
@@ -91,23 +91,31 @@ export const constantRoutes = [
     path: '/product',
     component: Layout,
     redirect: '/dashboard',
-    meta: { title: '产品管理中心', icon: 'documentation', affix: true },
+    meta: { title: '产品管理中心', icon: 'documentation', affix: false },
     children: [
       {
         path: 'dashboard',
         component: () => import('@/views/dashboard/administrator-center'),
         name: 'AdministratorCenter',
-        meta: { title: '课程管理', icon: '', affix: true }
+        meta: { title: '课程管理', icon: '', affix: false },
+        children: [
+          {
+            path: 'dashboard',
+            component: () => import('@/views/dashboard/administrator-center'),
+            name: 'AdministratorCenter',
+            meta: { title: '课程录入', icon: '', affix: false }
+          }
+        ]
       }, {
         path: 'administrator',
         component: () => import('@/views/dashboard/administrator'),
         name: 'Administrator',
-        meta: { title: '大咖管理', icon: '', affix: true }
+        meta: { title: '大咖管理', icon: '', affix: false }
       }, {
         path: 'administrator',
         component: () => import('@/views/dashboard/administrator'),
         name: 'Administrator',
-        meta: { title: '问答管理', icon: '', affix: true }
+        meta: { title: '问答管理', icon: '', affix: false }
       }
     ]
   }
