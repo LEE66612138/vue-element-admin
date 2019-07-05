@@ -78,7 +78,7 @@ export const constantRoutes = [
         path: 'dashboard',
         component: () => import('@/views/dashboard/administrator-center'),
         name: 'AdministratorCenter',
-        meta: { title: '管理员中心', icon: '', affix: true }
+        meta: { title: '管理员中心', icon: '', affix: false }
       }, {
         path: 'administrator',
         component: () => import('@/views/dashboard/administrator'),
@@ -90,28 +90,53 @@ export const constantRoutes = [
   {
     path: '/product',
     component: Layout,
-    redirect: '/dashboard',
+    name: 'product',
+    // redirect: '/product/kechengguanli/kechengluru',
     meta: { title: '产品管理中心', icon: 'documentation', affix: false },
     children: [
       {
-        path: 'dashboard',
-        component: () => import('@/views/dashboard/administrator-center'),
-        name: 'AdministratorCenter',
+        path: 'kechengguanli',
+        name: 'kechengguanli',
+        component: () => import('@/views//product/index'),
+        alwaysShow: true,
         meta: { title: '课程管理', icon: '', affix: false },
         children: [
           {
-            path: 'dashboard',
-            component: () => import('@/views/dashboard/administrator-center'),
-            name: 'AdministratorCenter',
+            path: 'kechengluru',
+            component: () => import('@/views//product/kechengguanli/kechengluru'),
+            name: 'kechengluru',
             meta: { title: '课程录入', icon: '', affix: false }
+          },
+          {
+            path: 'keshiluru',
+            component: () => import('@/views//product/kechengguanli/keshiluru'),
+            name: 'keshiluru',
+            meta: { title: '课时录入', icon: '', affix: false }
+          },
+          {
+            path: 'keshibianji',
+            component: () => import('@/views//product/kechengguanli/keshibianji'),
+            name: 'keshibianji',
+            meta: { title: '课时编辑', icon: '', affix: false }
           }
         ]
-      }, {
-        path: 'administrator',
-        component: () => import('@/views/dashboard/administrator'),
-        name: 'Administrator',
-        meta: { title: '大咖管理', icon: '', affix: false }
-      }, {
+      },
+      {
+        path: 'dakaguanli',
+        component: Layout,
+        name: 'dakaguanli',
+        alwaysShow: true,
+        meta: { title: '大咖管理', icon: '', affix: false },
+        children: [
+          {
+            path: 'dakaluru',
+            component: () => import('@/views//product/dakaguanli/dakaluru'),
+            name: 'dakaluru',
+            meta: { title: '大咖录入', icon: '', affix: false }
+          }
+        ]
+      },
+      {
         path: 'administrator',
         component: () => import('@/views/dashboard/administrator'),
         name: 'Administrator',
