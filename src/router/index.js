@@ -102,22 +102,28 @@ export const constantRoutes = [
         meta: { title: '课程管理', icon: '', affix: false },
         children: [
           {
+            path: 'kechengliebiao',
+            component: () => import('@/views/product/kechengguanli/kechengliebiao'),
+            name: 'kechengliebiao',
+            meta: { title: '课程列表', icon: '', affix: false }
+          },
+          {
             path: 'kechengluru',
-            component: () => import('@/views//product/kechengguanli/kechengluru'),
+            component: () => import('@/views/product/kechengguanli/kechengluru'),
             name: 'kechengluru',
             meta: { title: '课程录入', icon: '', affix: false }
           },
           {
-            path: 'keshiluru',
-            component: () => import('@/views//product/kechengguanli/keshiluru'),
-            name: 'keshiluru',
-            meta: { title: '课时录入', icon: '', affix: false }
+            path: 'keshiliebiao',
+            component: () => import('@/views/product/kechengguanli/keshiliebiao'),
+            name: 'keshiliebiao',
+            meta: { title: '课时列表', icon: '', affix: false }
           },
           {
-            path: 'keshibianji',
-            component: () => import('@/views//product/kechengguanli/keshibianji'),
-            name: 'keshibianji',
-            meta: { title: '课时编辑', icon: '', affix: false }
+            path: 'keshiluru',
+            component: () => import('@/views/product/kechengguanli/keshiluru'),
+            name: 'keshiluru',
+            meta: { title: '课时录入', icon: '', affix: false }
           }
         ]
       },
@@ -130,7 +136,7 @@ export const constantRoutes = [
         children: [
           {
             path: 'dakaluru',
-            component: () => import('@/views//product/dakaguanli/dakaluru'),
+            component: () => import('@/views/product/dakaguanli/dakaluru'),
             name: 'dakaluru',
             meta: { title: '大咖录入', icon: '', affix: false }
           }
