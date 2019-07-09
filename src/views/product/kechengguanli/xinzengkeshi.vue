@@ -1,5 +1,15 @@
 <template>
   <div>
+    <div style="position:absolute; right:160px; top:15px">
+      <router-link to="keshibianji">
+        <el-button class="pan-btn yellow-btn">返回列表</el-button>
+      </router-link>
+    </div>
+    <div style="position:absolute; right:10px; top:15px">
+      <router-link to="">
+        <button class="pan-btn light-blue-btn">课时发布</button>
+      </router-link>
+    </div>
     <div style="display：inline-block; float:left">
       <span style="color:red">*</span>
       <span>课时名称 :</span>
@@ -9,7 +19,7 @@
       <span>课时序列 :</span>
       <input type="text">
     </div>
-    <br>
+    <div style="clear:both" />
     <br>
     <div>
       <span style="color:red">*</span>
@@ -51,5 +61,7 @@
 </script>
 
 <style lang="scss" scoped>
-
+  *{
+    font-size: 17px;
+  }
 </style>

@@ -1,5 +1,15 @@
 <template>
   <div>
+    <div style="position:absolute; right:160px; top:15px">
+      <router-link to="kechengliebiao">
+        <el-button class="pan-btn yellow-btn">返回列表</el-button>
+      </router-link>
+    </div>
+    <div style="position:absolute; right:10px; top:15px">
+      <router-link to="">
+        <button class="pan-btn light-blue-btn">课程发布</button>
+      </router-link>
+    </div>
     <div>
       <span style="color:red">*</span>
       <span>课程名称 :</span>
@@ -23,6 +33,7 @@
     <div>
       <span style="color:red">*</span>
       <span>课程简介 :</span>
+      <br>
       <textarea id="" name="" cols="50" rows="5" />
     </div>
     <br>
@@ -44,6 +55,7 @@
           <option value="wenxue">文学</option>
         </select>
       </form>
+      <el-button size="mini">添加标签</el-button>
     </div>
     <br>
     <div>
@@ -76,5 +88,7 @@
 </script>
 
 <style lang="scss" scoped>
-
+  *{
+    font-size: 17px;
+  }
 </style>
