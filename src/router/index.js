@@ -186,6 +186,18 @@ export const constantRoutes = [
             component: () => import('@/views/product/wendaguanli/wendaliebiao'),
             name: 'wendaliebiao',
             meta: { title: '问答列表', icon: '', affix: false }
+          },
+          {
+            path: 'tiwenguanli',
+            component: () => import('@/views/product/wendaguanli/tiwenguanli'),
+            name: 'tiwenguanli',
+            meta: { title: '提问管理', icon: '', affix: false }
+          },
+          {
+            path: 'wendaluru',
+            component: () => import('@/views/product/wendaguanli/wendaluru'),
+            name: 'wendaluru',
+            meta: { title: '问答录入', icon: '', affix: false }
           }
         ]
       }

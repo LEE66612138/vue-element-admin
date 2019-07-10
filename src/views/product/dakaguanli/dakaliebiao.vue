@@ -7,9 +7,9 @@
       </router-link>
     </div>
     <br>
-    <div style="display:inline-block;margin-left:50px">
+    <div style="display:inline-block;margin-left:50px;font-size:17px">
       <span>上架人员:</span>
-      <form style="display:inline-block;margin-left:10px">
+      <form style="display:inline-block;margin-left:10px;font-size:17px">
         <select name="operator">
           <option value="quanbu">全部</option>
           <option value="kechengbankuai">张三</option>

@@ -29,8 +29,10 @@
     <ul>
       <li v-for="item in items" :key="item.name" style="display:inline-block; float：left; margin-right:100px; margin-bottom:30px;">
         <div class="userPicture">{{ item.picture }}</div>
+        <br>
         <span>图标</span>
         <span>{{ item.name }}</span>
+        <br>
         <br>
         <span>待回答：</span>
         <span>{{ item.number }}</span>
