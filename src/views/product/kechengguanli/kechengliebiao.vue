@@ -42,9 +42,9 @@
     </div>
     <div>
       <div style="position:absolute; right:10px; top:65px">
-        <button class="pan-btn light-blue-btn">全部重置</button>
+        <el-button class="pan-btn light-blue-btn">全部重置</el-button>
       </div>
-      <div class="app-container">
+      <div class="kechengliebiao">
         <el-table
           :data="list"
         >

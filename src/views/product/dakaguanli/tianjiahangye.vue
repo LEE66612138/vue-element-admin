@@ -2,21 +2,22 @@
   <div id="container">
     <div class="top">
       <span>添加</span>
-      <router-link to="kechengluru">
+      <router-link to="dakaluru">
         <span class="closs">[x]</span>
       </router-link>
     </div>
     <div class="content">
       <div class="content-print">
-        <span>课程标签</span>
+        <span>行业分类</span>
         <input type="text">
       </div>
     </div>
     <div class="build">
-      <router-link to="kechengluru">
+      <router-link to="dakaluru">
         <button>取消</button>
       </router-link>
       <button>创建</button>
+
     </div>
   </div>
 </template>

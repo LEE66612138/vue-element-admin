@@ -55,7 +55,9 @@
           <option value="wenxue">文学</option>
         </select>
       </form>
-      <el-button size="mini">添加标签</el-button>
+      <router-link to="xinbiaoqian">
+        <el-button size="mini">添加标签</el-button>
+      </router-link>
     </div>
     <br>
     <div>

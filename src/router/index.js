@@ -128,29 +128,66 @@ export const constantRoutes = [
             name: 'xinzengkeshi',
             hidden: true,
             meta: { title: '新增课时', icon: '', affix: false }
+          },
+          {
+            path: 'xinbiaoqian',
+            component: () => import('@/views/product/kechengguanli/xinbiaoqian'),
+            name: 'xinbiaoqian',
+            hidden: true,
+            meta: { title: '新标签', icon: '', affix: false }
           }
         ]
       },
       {
         path: 'dakaguanli',
-        component: Layout,
         name: 'dakaguanli',
         alwaysShow: true,
+        component: () => import('@/views//product/index'),
         meta: { title: '大咖管理', icon: '', affix: false },
         children: [
+          {
+            path: 'dakaliebiao',
+            component: () => import('@/views/product/dakaguanli/dakaliebiao'),
+            name: 'dakaliebiao',
+            meta: { title: '大咖列表', icon: '', affix: false }
+          },
           {
             path: 'dakaluru',
             component: () => import('@/views/product/dakaguanli/dakaluru'),
             name: 'dakaluru',
+            hidden: true,
             meta: { title: '大咖录入', icon: '', affix: false }
+          },
+          {
+            path: 'dakaxiangqing',
+            component: () => import('@/views/product/dakaguanli/dakaxiangqing'),
+            name: 'dakaxiangqing',
+            hidden: true,
+            meta: { title: '大咖详情', icon: '', affix: false }
+          },
+          {
+            path: 'tianjiahangye',
+            component: () => import('@/views/product/dakaguanli/tianjiahangye'),
+            name: 'tianjiahangye',
+            hidden: true,
+            meta: { title: '添加行业', icon: '', affix: false }
           }
         ]
       },
       {
-        path: 'administrator',
-        component: () => import('@/views/dashboard/administrator'),
-        name: 'Administrator',
-        meta: { title: '问答管理', icon: '', affix: false }
+        path: 'wendaguanli',
+        name: 'wendaguanli',
+        alwaysShow: true,
+        component: () => import('@/views//product/index'),
+        meta: { title: '问答管理', icon: '', affix: false },
+        children: [
+          {
+            path: 'wendaliebiao',
+            component: () => import('@/views/product/wendaguanli/wendaliebiao'),
+            name: 'wendaliebiao',
+            meta: { title: '问答列表', icon: '', affix: false }
+          }
+        ]
       }
     ]
   }
