@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1 style="color:black">提问管理</h1>
+    <h1 style="color:black">回答管理</h1>
     <br>
     <div style="display:inline-block;margin-left:50px;font-size:17px">
       <span>大咖:</span>
@@ -14,18 +14,7 @@
         </select>
       </form>
     </div>
-    <div style="display:inline-block;margin-left:50px;font-size:17px">
-      <span>问题状态:</span>
-      <form style="display:inline-block;margin-left:10px;font-size:17px">
-        <select name="operator">
-          <option value="quanbu">全部</option>
-          <option value="kechengbankuai">待回答</option>
-          <option value="lisi">已过期</option>
-          <option value="wangwu">已婉拒</option>
-        </select>
-      </form>
-    </div>
-    <el-button class="pan-btn light-blue-btn" style="float:right; margin-right:10px;">全部重置</el-button>
+    <el-button type="mini" style="float:right; margin-right:10px;">全部重置</el-button>
     <br>
     <br>
     <br>
@@ -66,7 +55,7 @@
         </el-table-column>
         <el-table-column label="提问日期" align="center" width="100px">
           <template slot-scope="scope">
-            <span>{{ scope.row.data }}</span>
+            <span>{{ scope.row.date }}</span>
           </template>
         </el-table-column>
         <el-table-column label="回答倒计时" align="center" width="100px">
@@ -74,25 +63,33 @@
             <span>{{ scope.row.countdown }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="状态" class-name="status-col" align="center" width="100">
+        <el-table-column label="状态" align="center" width="100">
           <template slot-scope="scope">
             {{ scope.row.status }}
           </template>
         </el-table-column>
-        <el-table-column :show-overflow-tooltip="true" label="备注" width="150px" align="center">
+        <el-table-column label="上架时间" align="center" width="100">
           <template slot-scope="scope">
-            <span>{{ scope.row.remark }}</span>
+            {{ scope.row.time }}
+          </template>
+        </el-table-column>
+        <el-table-column label="上架人员" align="center" width="100">
+          <template slot-scope="scope">
+            {{ scope.row.reviewer }}
           </template>
         </el-table-column>
 
-        <el-table-column label="操作" align="center" width="230" class-name="small-padding fixed-width">
-          <router-link to="wendaluru">
+        <el-table-column label="操作" align="center" width="300" class-name="small-padding fixed-width">
+          <router-link to="">
             <el-button type="primary" align="center">
-              问答录入
+              回答上架
             </el-button>
           </router-link>
           <el-button type="primary" align="center">
-            婉拒
+            详情
+          </el-button>
+          <el-button type="primary" align="center">
+            试听
           </el-button>
         </el-table-column>
       </el-table>
@@ -111,10 +108,11 @@ export default {
         details: '这是问题这是问题这是问题这是问题这是问题这是问题这是问题这是问题',
         name: '张三',
         price: '12',
-        data: '2019-02-06 12:06',
+        date: '2019-02-06 12:06',
         countdown: '52:12',
-        status: '待回答',
-        remark: '这是备注这是备注是备注这是备注这是备注这是备注这是备注这是备注这是备注这是备注'
+        status: '已上架',
+        time: '2019-03-02',
+        people: '张亚奇'
       },
       {
         id: '2',
@@ -123,10 +121,11 @@ export default {
         details: '这是问题这是问题这是问题这是问题这是问题这是问题这是问题这是问题这是问题',
         name: '李四',
         price: '25',
-        data: '2019-09-06 08:06',
+        date: '2019-09-06 08:06',
         countdown: '12:12',
-        status: '已过期',
-        remark: '这是备注这是备注这是备注这是备注这是备注这是备注这是备注这是备注这是备注这是备注这是备注'
+        status: '未上架',
+        time: '2019-03-02',
+        reviewer: '张亚奇'
       },
       {
         id: '3',
@@ -135,10 +134,11 @@ export default {
         details: '这是问题这是问题这是问题这是问题这是问题这是问题这是问题这是问题这是问题这是问题',
         name: '王五',
         price: '78',
-        data: '2017-11-12 04:15',
+        date: '2017-11-12 04:15',
         countdown: '02：05',
-        status: '已婉拒',
-        remark: '这是备注这是备注这是备注这是备注这是备注这是备注这是备注这是备注这是备注这是备注这是备注这是备注'
+        status: '已上架',
+        time: '2019-03-02',
+        reviewer: '张亚奇'
       }
       ]
     }

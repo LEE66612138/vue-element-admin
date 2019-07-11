@@ -72,7 +72,8 @@ export const constantRoutes = [
     path: '/',
     component: Layout,
     redirect: '/administrator-center',
-    meta: { title: '管理中心', icon: 'dashboard', affix: true },
+    name: 'Dashboard',
+    meta: { title: '管理中心', icon: 'dashboard', affix: false },
     children: [
       {
         path: 'administrator-center',
@@ -90,8 +91,8 @@ export const constantRoutes = [
   {
     path: '/product',
     component: Layout,
-    name: 'product',
-    // redirect: '/product/kechengguanli/kechengluru',
+    name: 'Dashboard',
+    redirect: '/product/kechengguanli/kechengliebiao',
     meta: { title: '产品管理中心', icon: 'documentation', affix: false },
     children: [
       {
@@ -142,7 +143,8 @@ export const constantRoutes = [
         path: 'dakaguanli',
         name: 'dakaguanli',
         alwaysShow: true,
-        component: () => import('@/views//product/index'),
+        redirect: '/product/dakaguanli/dakaliebiao',
+        component: () => import('@/views/product/index'),
         meta: { title: '大咖管理', icon: '', affix: false },
         children: [
           {
@@ -178,7 +180,8 @@ export const constantRoutes = [
         path: 'wendaguanli',
         name: 'wendaguanli',
         alwaysShow: true,
-        component: () => import('@/views//product/index'),
+        redirect: '/product/wendaguanli/wendaliebiao',
+        component: () => import('@/views/product/index'),
         meta: { title: '问答管理', icon: '', affix: false },
         children: [
           {
@@ -194,9 +197,16 @@ export const constantRoutes = [
             meta: { title: '提问管理', icon: '', affix: false }
           },
           {
+            path: 'huidaguanli',
+            component: () => import('@/views/product/wendaguanli/huidaguanli'),
+            name: 'huidaguanli',
+            meta: { title: '回答管理', icon: '', affix: false }
+          },
+          {
             path: 'wendaluru',
             component: () => import('@/views/product/wendaguanli/wendaluru'),
             name: 'wendaluru',
+            hidden: true,
             meta: { title: '问答录入', icon: '', affix: false }
           }
         ]

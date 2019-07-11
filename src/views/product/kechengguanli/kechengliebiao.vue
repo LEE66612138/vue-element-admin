@@ -5,25 +5,19 @@
     <div style="margin-left:50px">
       <div style="display:inline-block; margin-right:150px">
         <span>上架人员</span>
-        <form style="display:inline-block">
-          <select name="operator">
-            <option value="quanbu">全部</option>
-            <option value="zhangsan">张三</option>
-            <option value="lisi">李四</option>
-            <option value="wangwu">王五</option>
-            <option value="audi">Audi</option>
-          </select>
-        </form>
+        <el-select v-model="reviewer" style="display:inline-block">
+          <el-option v-for="item in list" :key="item.id" :label="item.reviewer" :value="item.id" />
+        </el-select>
       </div>
       <div style="display:inline-block; margin-right:150px">
         <span>所属大咖</span>
         <form style="display:inline-block">
           <select name="operator">
-            <option value="quanbu">全部</option>
-            <option value="suoshudaka">所属大咖</option>
-            <option value="lisi">李四</option>
-            <option value="wangwu">王五</option>
-            <option value="audi">Audi</option>
+            <option key="quanbu" value="quanbu">全部</option>
+            <option key="suoshudaka" value="suoshudaka">所属大咖</option>
+            <option key="lisi" value="lisi">李四</option>
+            <option key="wangwu" value="wangwu">王五</option>
+            <option key="audi" value="audi">Audi</option>
           </select>
         </form>
       </div>
@@ -39,11 +33,13 @@
           </select>
         </form>
       </div>
-    </div>
-    <div>
-      <div style="position:absolute; right:10px; top:65px">
+      <div style="float:right;">
         <el-button class="pan-btn light-blue-btn">全部重置</el-button>
       </div>
+    </div>
+    <br>
+    <br>
+    <div>
       <div class="kechengliebiao">
         <el-table
           :data="list"
@@ -134,6 +130,7 @@
 export default {
   data() {
     return {
+      reviewer: '',
       list: [{
         id: '1',
         title: '高等数学',
@@ -143,7 +140,7 @@ export default {
         author: '张三',
         classtype: '数学',
         isComplete: '连载中',
-        stadus: '已上架',
+        status: '已上架',
         timestamp: '2019-05-02 05:20',
         reviewer: '管理员一'
       },
@@ -156,7 +153,20 @@ export default {
         author: '李四',
         classtype: '英语',
         isComplete: '已完结',
-        stadus: '未上架',
+        status: '未上架',
+        timestamp: '2018-07-15 10:40',
+        reviewer: '管理员二'
+      },
+      {
+        id: '3',
+        title: '土木工程',
+        picture: '',
+        format: '音频',
+        period: '15/19',
+        author: '李四',
+        classtype: '建筑',
+        isComplete: '已完结',
+        status: '未上架',
         timestamp: '2018-07-15 10:40',
         reviewer: '管理员二'
       }

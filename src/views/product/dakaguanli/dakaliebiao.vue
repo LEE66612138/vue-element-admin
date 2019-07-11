@@ -126,7 +126,7 @@ export default {
         notReply: '6',
         courses: '3',
         fans: '66688',
-        stadus: '已上架',
+        status: '已上架',
         timestamp: '2019-05-02 05:20',
         reviewer: '管理员一'
       },
@@ -140,7 +140,7 @@ export default {
         notReply: '2',
         courses: '1',
         fans: '6846',
-        stadus: '未上架',
+        status: '未上架',
         timestamp: '2018-07-15 10:40',
         reviewer: '管理员二'
       }
