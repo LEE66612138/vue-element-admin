@@ -112,7 +112,7 @@ export default {
         countdown: '52:12',
         status: '已上架',
         time: '2019-03-02',
-        people: '张亚奇'
+        reviewer: '张亚奇'
       },
       {
         id: '2',

@@ -33,7 +33,8 @@ import ThemePicker from '@/components/ThemePicker'
 export default {
   components: { ThemePicker },
   data() {
-    return {}
+    return {
+    }
   },
   computed: {
     fixedHeader: {
