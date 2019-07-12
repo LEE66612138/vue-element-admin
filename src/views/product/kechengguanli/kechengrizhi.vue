@@ -5,27 +5,20 @@
     <div style="display:inline-block;margin-left:50px;font-size:17px">
       <span>录入人员 :</span>
       <form style="display:inline-block;margin-left:10px;font-size:17px">
-        <select name="operator">
-          <option value="quanbu">娜姐</option>
-          <option value="kechengbankuai">张三</option>
-          <option value="lisi">李四</option>
-          <option value="wangwu">王五</option>
-          <option value="audi">Audi</option>
-        </select>
+        <el-select v-model="reviewer" @change="selectOne('reviewer')">
+          <el-option v-for="item in select('reviewer')" :key="item" :value="item" />
+        </el-select>
       </form>
     </div>
     <div style="display:inline-block;margin-left:50px;font-size:17px">
       <span>操作类型 :</span>
       <form style="display:inline-block;margin-left:10px;font-size:17px">
-        <select name="operator">
-          <option value="quanbu">编辑课程</option>
-          <option value="kechengbankuai">新增课程</option>
-          <option value="lisi">新增课时</option>
-          <option value="wangwu">编辑课时</option>
-        </select>
+        <el-select v-model="operation" @change="selectOne('operation')">
+          <el-option v-for="item in select('operation')" :key="item" :value="item" />
+        </el-select>
       </form>
     </div>
-    <el-button type="mini" style="float:right; margin-right:10px;">全部重置</el-button>
+    <el-button type="mini" style="float:right; margin-right:10px; margin-top:5px;">全部重置</el-button>
     <br>
     <br>
     <br>
@@ -66,6 +59,8 @@
 export default {
   data() {
     return {
+      reviewer: '',
+      operation: '',
       list: [{
         id: '1',
         reviewer: '张亚奇',
@@ -81,12 +76,48 @@ export default {
         date: '2019-02-06 12:06'
       }, {
         id: '3',
-        reviewer: '张亚奇',
+        reviewer: '娜姐',
+        operation: '编辑课程',
+        log: '编辑了ID123456的课程',
+        date: '2019-02-06 12:06'
+      }, {
+        id: '4',
+        reviewer: '娜姐',
+        operation: '编辑课程',
+        log: '编辑了ID123456的课程',
+        date: '2019-02-06 12:06'
+      }, {
+        id: '5',
+        reviewer: '娜姐',
         operation: '编辑课程',
         log: '编辑了ID123456的课程',
         date: '2019-02-06 12:06'
       }
       ]
+    }
+  },
+  computed: {
+
+  },
+  methods: {
+    select(p) {
+      const newArr = []
+      for (var i = 0; i < this.list.length; i++) {
+        if (newArr.indexOf(this.list[i][p]) === -1) {
+          newArr.push(this.list[i][p])
+        }
+      }
+      return newArr
+    },
+    selectOne(p) {
+      const newArr = []
+      for (var i = 0; i < this.list.length; i++) {
+        if (this.list[i][p] === this[p]) {
+          newArr.push(this.list[i])
+        }
+      }
+      this.list = newArr
+      return this.list
     }
   }
 }
