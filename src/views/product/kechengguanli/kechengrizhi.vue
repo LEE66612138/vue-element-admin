@@ -18,12 +18,13 @@
         </el-select>
       </form>
     </div>
-    <el-button type="mini" style="float:right; margin-right:10px; margin-top:5px;">全部重置</el-button>
+    <el-button type="mini" style="float:right; margin-right:10px; margin-top:5px;" @click="clearFilter()">全部重置</el-button>
     <br>
     <br>
     <br>
     <div class="dakaliebiao">
       <el-table
+        ref="filterTable"
         :data="list"
       >
         <el-table-column type="selection" width="45px" />
@@ -118,6 +119,9 @@ export default {
       }
       this.list = newArr
       return this.list
+    },
+    clearFilter() {
+      this.$refs.filterTable.clearFilter()
     }
   }
 }
