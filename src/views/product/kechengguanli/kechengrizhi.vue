@@ -6,7 +6,7 @@
       <span>录入人员 :</span>
       <form style="display:inline-block;margin-left:10px;font-size:17px">
         <select name="operator">
-          <option value="quanbu">全部</option>
+          <option value="quanbu">娜姐</option>
           <option value="kechengbankuai">张三</option>
           <option value="lisi">李四</option>
           <option value="wangwu">王五</option>
