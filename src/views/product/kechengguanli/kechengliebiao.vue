@@ -42,47 +42,48 @@
     <div>
       <div class="kechengliebiao">
         <el-table
+          v-loading="listLoading"
           :data="list"
         >
           <el-table-column type="selection" width="45px" />
           <el-table-column label="ID" prop="id" align="center" width="50px">
             <template slot-scope="scope">
-              <span>{{ scope.row.id }}</span>
+              <span>{{ scope.row.no }}</span>
             </template>
           </el-table-column>
           <el-table-column label="课程名称" align="center" min-width="150px">
             <template slot-scope="scope">
-              <span>{{ scope.row.title }}</span>
+              <span>{{ scope.row.courseTitle }}</span>
             </template>
           </el-table-column>
           <el-table-column label="封面" align="center" min-width="150px">
             <template slot-scope="scope">
-              <span>{{ scope.row.picture }}</span>
+              <span>{{ scope.row.headImgUrl }}</span>
             </template>
           </el-table-column>
           <el-table-column label="课程类型" align="center" min-width="80px">
             <template slot-scope="scope">
-              <span>{{ scope.row.format }}</span>
+              <span>{{ scope.row.courseType }}</span>
             </template>
           </el-table-column>
           <el-table-column label="总课时" align="center" min-width="100px">
             <template slot-scope="scope">
-              <span>{{ scope.row.period }}</span>
+              <span>{{ scope.row.classTotalNum }}</span>
             </template>
           </el-table-column>
           <el-table-column label="所属大咖" width="110px" align="center">
             <template slot-scope="scope">
-              <span>{{ scope.row.author }}</span>
+              <span>{{ scope.row.broadCaster }}</span>
             </template>
           </el-table-column>
           <el-table-column label="课程板块" align="center" min-width="150px">
             <template slot-scope="scope">
-              <span>{{ scope.row.classtype }}</span>
+              <span>{{ scope.row.categoryName }}</span>
             </template>
           </el-table-column>
           <el-table-column label="发布类型" align="center" min-width="150px">
             <template slot-scope="scope">
-              <span>{{ scope.row.isComplete }}</span>
+              <span>{{ scope.row.publishType }}</span>
             </template>
           </el-table-column>
           <el-table-column label="状态" class-name="status-col" align="center" width="100">
@@ -127,50 +128,26 @@
 </template>
 
 <script>
+import { fetchList } from '@/api/kechengliebiao'
 export default {
   data() {
     return {
       reviewer: '',
-      list: [{
-        id: '1',
-        title: '高等数学',
-        picture: '',
-        format: '视频',
-        period: '20/25',
-        author: '张三',
-        classtype: '数学',
-        isComplete: '连载中',
-        status: '已上架',
-        timestamp: '2019-05-02 05:20',
-        reviewer: '管理员一'
-      },
-      {
-        id: '2',
-        title: '英语四级',
-        picture: '',
-        format: '音频',
-        period: '12/15',
-        author: '李四',
-        classtype: '英语',
-        isComplete: '已完结',
-        status: '未上架',
-        timestamp: '2018-07-15 10:40',
-        reviewer: '管理员二'
-      },
-      {
-        id: '3',
-        title: '土木工程',
-        picture: '',
-        format: '音频',
-        period: '15/19',
-        author: '李四',
-        classtype: '建筑',
-        isComplete: '已完结',
-        status: '未上架',
-        timestamp: '2018-07-15 10:40',
-        reviewer: '管理员二'
-      }
-      ]
+      list: null,
+      listLoading: true
+    }
+  },
+  created() {
+    this.getList()
+  },
+  methods: {
+    getList() {
+      this.listLoading = true
+      fetchList().then(response => {
+        this.list = response.data.items
+        this.listLoading = false
+      }).catch(response => {
+      })
     }
   }
 }
