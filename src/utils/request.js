@@ -1,7 +1,9 @@
 import axios from 'axios'
+// import { md5 } from 'blueimp-md5'
 import { MessageBox, Message } from 'element-ui'
 import store from '@/store'
 import { getToken } from '@/utils/auth'
+// import { generateUUID } from '@/assets/generateUUID.js'
 
 // create an axios instance
 const service = axios.create({
@@ -19,6 +21,10 @@ service.interceptors.request.use(
       // let each request carry token
       // ['X-Token'] is a custom headers key
       // please modify it according to the actual situation
+      // var uuid
+      // config.headers['_mzuuid'] = uuid = generateUUID()
+      // config.headers['_mzmdfi'] = md5(`${uuid}f2a8375e29405e49b4c42576960522b8`)
+      // config.headers['_mzsetk'] = getToken()
       config.headers['X-Token'] = getToken()
     }
     return config

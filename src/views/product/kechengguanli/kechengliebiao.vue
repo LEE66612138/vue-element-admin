@@ -128,7 +128,7 @@
 </template>
 
 <script>
-import { fetchList } from '@/api/kechengliebiao'
+// import { fetchList } from '@/api/kechengliebiao'
 export default {
   data() {
     return {
@@ -136,20 +136,20 @@ export default {
       list: null,
       listLoading: true
     }
-  },
-  created() {
-    this.getList()
-  },
-  methods: {
-    getList() {
-      this.listLoading = true
-      fetchList().then(response => {
-        this.list = response.data.items
-        this.listLoading = false
-      }).catch(response => {
-      })
-    }
   }
+  // created() {
+  //   this.getList()
+  // },
+  // methods: {
+  //   getList() {
+  //     this.listLoading = true
+  //     fetchList().then(response => {
+  //       this.list = response.data.items
+  //       this.listLoading = false
+  //     }).catch(response => {
+  //     })
+  //   }
+  // }
 }
 </script>
 
