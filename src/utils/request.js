@@ -3,7 +3,7 @@ import axios from 'axios'
 import { MessageBox, Message } from 'element-ui'
 import store from '@/store'
 import { getToken } from '@/utils/auth'
-// import { generateUUID } from '@/assets/generateUUID.js'
+// import { generateUUID } from '@/assets/generateUUID'
 
 // create an axios instance
 const service = axios.create({

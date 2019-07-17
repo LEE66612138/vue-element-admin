@@ -128,28 +128,40 @@
 </template>
 
 <script>
-// import { fetchList } from '@/api/kechengliebiao'
+import { fetchList } from '@/api/kechengliebiao'
+// import axios from 'axios'
 export default {
   data() {
     return {
       reviewer: '',
       list: null,
-      listLoading: true
+      listLoading: true,
+      listQuery: {
+        page: 1,
+        limit: 10
+      }
+    }
+  },
+  // created() {
+  //   axios.post('http://192.168.2.51/api/man/v1/course/coursePage', this.listQuery).then(response => {
+  //     console.log(response.data)
+  //   }).catch(error => {
+  //     console.log(error)
+  //     alert('网络错误，不能访问')
+  //   })
+  // }
+  created() {
+    this.getList()
+  },
+  methods: {
+    getList() {
+      fetchList(this.listQuery).then(response => {
+        console.log(response.data + '1')
+      }).catch(response => {
+        console.log(response.data + '2')
+      })
     }
   }
-  // created() {
-  //   this.getList()
-  // },
-  // methods: {
-  //   getList() {
-  //     this.listLoading = true
-  //     fetchList().then(response => {
-  //       this.list = response.data.items
-  //       this.listLoading = false
-  //     }).catch(response => {
-  //     })
-  //   }
-  // }
 }
 </script>
 

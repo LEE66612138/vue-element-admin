@@ -144,11 +144,11 @@ export default {
             .then(() => {
               this.$router.push({ path: this.redirect || '/', query: this.otherQuery })
               this.loading = false
-              console.log(1)
+              console.log(this)
             })
             .catch(() => {
               this.loading = false
-              console.log(2)
+              console.log(this)
             })
         } else {
           console.log('error submit!!')
