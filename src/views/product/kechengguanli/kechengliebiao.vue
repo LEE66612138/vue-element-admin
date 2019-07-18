@@ -5,33 +5,21 @@
     <div style="margin-left:50px">
       <div style="display:inline-block; margin-right:150px">
         <span>上架人员</span>
-        <el-select v-model="reviewer" style="display:inline-block">
-          <el-option v-for="item in list" :key="item.id" :label="item.reviewer" :value="item.id" />
+        <el-select v-model="putawayUserName" style="display:inline-block">
+          <el-option v-for="item in putawayUserNameList" :key="item" :label="item" :value="item" />
         </el-select>
       </div>
       <div style="display:inline-block; margin-right:150px">
         <span>所属大咖</span>
-        <form style="display:inline-block">
-          <select name="operator">
-            <option key="quanbu" value="quanbu">全部</option>
-            <option key="suoshudaka" value="suoshudaka">所属大咖</option>
-            <option key="lisi" value="lisi">李四</option>
-            <option key="wangwu" value="wangwu">王五</option>
-            <option key="audi" value="audi">Audi</option>
-          </select>
-        </form>
+        <el-select v-model="broadcaster" style="display:inline-block" @change="selectOne('broadcaster')">
+          <el-option v-for="item in broadcasterList" :key="item" :label="item" :value="item" />
+        </el-select>
       </div>
       <div style="display:inline-block; margin-right:150px">
         <span>课程版块</span>
-        <form style="display:inline-block">
-          <select name="operator">
-            <option value="quanbu">全部</option>
-            <option value="kechengbankuai">课程板块</option>
-            <option value="lisi">李四</option>
-            <option value="wangwu">王五</option>
-            <option value="audi">Audi</option>
-          </select>
-        </form>
+        <el-select v-model="categoryName" style="display:inline-block">
+          <el-option v-for="item in categoryNameList" :key="item" :label="item" :value="item" />
+        </el-select>
       </div>
       <div style="float:right;">
         <el-button class="pan-btn light-blue-btn">全部重置</el-button>
@@ -46,7 +34,7 @@
           :data="list"
         >
           <el-table-column type="selection" width="45px" />
-          <el-table-column label="ID" prop="id" align="center" width="50px">
+          <el-table-column label="ID" prop="id" align="center" width="50px" :show-overflow-tooltip="true">
             <template slot-scope="scope">
               <span>{{ scope.row.no }}</span>
             </template>
@@ -58,7 +46,7 @@
           </el-table-column>
           <el-table-column label="封面" align="center" min-width="150px">
             <template slot-scope="scope">
-              <span>{{ scope.row.headImgUrl }}</span>
+              <img :src="scope.row.mainImgUrl" alt="" style="width:150px;height:90px">
             </template>
           </el-table-column>
           <el-table-column label="课程类型" align="center" min-width="80px">
@@ -68,12 +56,12 @@
           </el-table-column>
           <el-table-column label="总课时" align="center" min-width="100px">
             <template slot-scope="scope">
-              <span>{{ scope.row.classTotalNum }}</span>
+              <span>{{ scope.row.classUpdateNum + '/' + scope.row.classTotalNum }}</span>
             </template>
           </el-table-column>
           <el-table-column label="所属大咖" width="110px" align="center">
             <template slot-scope="scope">
-              <span>{{ scope.row.broadCaster }}</span>
+              <span>{{ scope.row.broadcaster }}</span>
             </template>
           </el-table-column>
           <el-table-column label="课程板块" align="center" min-width="150px">
@@ -91,14 +79,14 @@
               {{ scope.row.status }}
             </template>
           </el-table-column>
-          <el-table-column label="上架时间" width="150px" align="center">
+          <el-table-column label="上架时间" align="center" width="100">
             <template slot-scope="scope">
-              <span>{{ scope.row.timestamp }}</span>
+              <span>{{ timestampToTime(scope.row) }}</span>
             </template>
           </el-table-column>
           <el-table-column label="上架人员" width="110px" align="center">
             <template slot-scope="scope">
-              <span style="color:red;">{{ scope.row.reviewer }}</span>
+              <span style="color:red;">{{ scope.row.putawayUserName }}</span>
             </template>
           </el-table-column>
           <el-table-column label="操作" align="center" width="230" class-name="small-padding fixed-width">
@@ -128,39 +116,80 @@
 </template>
 
 <script>
-import { fetchList } from '@/api/kechengliebiao'
-// import axios from 'axios'
+// import { fetchList } from '@/api/kechengliebiao'
+
 export default {
   data() {
     return {
-      reviewer: '',
+      putawayUserName: '',
+      broadcaster: '',
+      categoryName: '',
       list: null,
+      putawayUserNameList: null,
+      broadcasterList: null,
+      categoryNameList: null,
       listLoading: true,
       listQuery: {
         page: 1,
-        limit: 10
+        pageSize: 40
       }
     }
   },
-  // created() {
-  //   axios.post('http://192.168.2.51/api/man/v1/course/coursePage', this.listQuery).then(response => {
-  //     console.log(response.data)
-  //   }).catch(error => {
-  //     console.log(error)
-  //     alert('网络错误，不能访问')
-  //   })
-  // }
   created() {
-    this.getList()
+    this.$axios.post('http://192.168.2.51/api/man/v1/course/coursePage', this.listQuery).then(response => {
+      console.log(response.data)
+      this.list = response.data.data
+      this.putawayUserNameList = this.select('putawayUserName')
+      this.broadcasterList = this.select('broadcaster')
+      this.categoryNameList = this.select('categoryName')
+      this.listLoading = false
+    }).catch(error => {
+      console.log(error)
+      alert('网络错误，不能访问')
+    })
   },
   methods: {
-    getList() {
-      fetchList(this.listQuery).then(response => {
-        console.log(response.data + '1')
-      }).catch(response => {
-        console.log(response.data + '2')
-      })
+    select(p) {
+      const newArr = []
+      for (var i = 0; i < this.list.length; i++) {
+        if (newArr.indexOf(this.list[i][p]) === -1) {
+          newArr.push(this.list[i][p])
+        }
+      }
+      return newArr
+    },
+    selectOne(p) {
+      const newArr = []
+      for (var i = 0; i < this.list.length; i++) {
+        if (this.list[i][p] === this[p]) {
+          newArr.push(this.list[i])
+        }
+      }
+      this.list = newArr
+      return this.list
+    },
+    timestampToTime(row, column) {
+      var date = new Date(row.putawayTime)
+      var Y = date.getFullYear() + '-'
+      var M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '-'
+      var D = date.getDate() + ' '
+      var h = date.getHours() + ':'
+      var m = date.getMinutes() + ':'
+      var s = date.getSeconds()
+      return Y + M + D + h + m + s
     }
+  // created() {
+  //   this.getList()
+  // },
+  // methods: {
+  //   getList() {
+  //     fetchList(this.listQuery).then(response => {
+  //       console.log(response.data + '1')
+  //     }).catch(response => {
+  //       console.log(response.data + '2')
+  //     })
+  //   }
+  // }
   }
 }
 </script>

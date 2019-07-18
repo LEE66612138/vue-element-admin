@@ -1,5 +1,7 @@
 import Vue from 'vue'
 
+import axios from 'axios'
+
 import Cookies from 'js-cookie'
 
 import 'normalize.css/normalize.css' // a modern alternative to CSS resets
@@ -31,6 +33,8 @@ import * as filters from './filters' // global filters
 // if (process.env.NODE_ENV === 'production') {
 //   mockXHR()
 // }
+
+Vue.prototype.$axios = axios
 
 Vue.use(Element, {
   size: Cookies.get('size') || 'medium' // set element-ui default size

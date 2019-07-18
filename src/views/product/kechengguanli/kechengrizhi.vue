@@ -6,7 +6,7 @@
       <span>录入人员 :</span>
       <form style="display:inline-block;margin-left:10px;font-size:17px">
         <el-select v-model="reviewer" @change="selectOne('reviewer')">
-          <el-option v-for="item in select('reviewer')" :key="item" :value="item" />
+          <el-option v-for="item in selectList('reviewer')" :key="item" :value="item" />
         </el-select>
       </form>
     </div>
@@ -14,7 +14,7 @@
       <span>操作类型 :</span>
       <form style="display:inline-block;margin-left:10px;font-size:17px">
         <el-select v-model="operation" @change="selectOne('operation')">
-          <el-option v-for="item in select('operation')" :key="item" :value="item" />
+          <el-option v-for="item in selectList('operation')" :key="item" :value="item" />
         </el-select>
       </form>
     </div>
@@ -101,7 +101,7 @@ export default {
 
   },
   methods: {
-    select(p) {
+    selectList(p) {
       const newArr = []
       for (var i = 0; i < this.list.length; i++) {
         if (newArr.indexOf(this.list[i][p]) === -1) {
