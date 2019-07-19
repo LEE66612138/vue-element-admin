@@ -2,27 +2,34 @@
   <div>
     <h1 style="color:black">课程管理</h1>
     <br>
-    <div style="margin-left:50px">
+    <div ref="selectContainer" style="margin-left:50px">
       <div style="display:inline-block; margin-right:150px">
         <span>上架人员</span>
-        <el-select v-model="putawayUserName" style="display:inline-block">
+        <el-select v-model="putawayUserName" style="display:inline-block" @change="selectOne('putawayUserName','putawayUserNameList')">
           <el-option v-for="item in putawayUserNameList" :key="item" :label="item" :value="item" />
         </el-select>
       </div>
       <div style="display:inline-block; margin-right:150px">
         <span>所属大咖</span>
-        <el-select v-model="broadcaster" style="display:inline-block" @change="selectOne('broadcaster')">
+        <el-select v-model="broadcaster" style="display:inline-block" @change="selectOne('broadcaster','broadcasterList')">
           <el-option v-for="item in broadcasterList" :key="item" :label="item" :value="item" />
         </el-select>
       </div>
       <div style="display:inline-block; margin-right:150px">
         <span>课程版块</span>
-        <el-select v-model="categoryName" style="display:inline-block">
+        <el-select v-model="categoryName" style="display:inline-block" @change="selectOne('categoryName','categoryNameList')">
           <el-option v-for="item in categoryNameList" :key="item" :label="item" :value="item" />
         </el-select>
       </div>
-      <div style="float:right;">
-        <el-button class="pan-btn light-blue-btn">全部重置</el-button>
+      <div style="float:right; margin-right:10px">
+        <router-link to="kechengluru">
+          <el-button type="primary" align="center">
+            课程录入
+          </el-button>
+        </router-link>
+      </div>
+      <div style="float:right;margin-right:10px">
+        <el-button type="primary" @click="resetAll()">全部重置</el-button>
       </div>
     </div>
     <br>
@@ -31,7 +38,7 @@
       <div class="kechengliebiao">
         <el-table
           v-loading="listLoading"
-          :data="list"
+          :data="slist"
         >
           <el-table-column type="selection" width="45px" />
           <el-table-column label="ID" prop="id" align="center" width="50px" :show-overflow-tooltip="true">
@@ -71,15 +78,19 @@
           </el-table-column>
           <el-table-column label="发布类型" align="center" min-width="150px">
             <template slot-scope="scope">
-              <span>{{ scope.row.publishType }}</span>
+              <el-tag :type="scope.row.classUpdateNum/scope.row.classTotalNum | statusFilter">
+                {{ scope.row.classUpdateNum/scope.row.classTotalNum == '1'?'已完结':'连载中' }}
+              </el-tag>
             </template>
           </el-table-column>
           <el-table-column label="状态" class-name="status-col" align="center" width="100">
             <template slot-scope="scope">
-              {{ scope.row.status }}
+              <el-tag :type="scope.row.status | statusFilter">
+                {{ scope.row.status == '0'?'未上架':'已上架' }}
+              </el-tag>
             </template>
           </el-table-column>
-          <el-table-column label="上架时间" align="center" width="100">
+          <el-table-column label="上架时间" align="center" width="110">
             <template slot-scope="scope">
               <span>{{ timestampToTime(scope.row) }}</span>
             </template>
@@ -90,21 +101,21 @@
             </template>
           </el-table-column>
           <el-table-column label="操作" align="center" width="230" class-name="small-padding fixed-width">
-            <template slot-scope="{row}">
+            <template slot-scope="scope">
               <router-link to="kechengluru">
-                <el-button type="primary" align="center">
-                  课程录入
+                <el-button type="primary" align="center" style="margin-bottom:5px">
+                  课程编辑
                 </el-button>
               </router-link>
-              <router-link to="keshibianji">
-                <el-button type="primary" align="center">
+              <router-link :to="{path: 'keshibianji', query:scope.row}">
+                <el-button type="primary" align="center" style="margin-bottom:5px">
                   课时编辑
                 </el-button>
               </router-link>
-              <el-button v-if="row.status!='published'" type="success" align="center">
+              <el-button v-if="scope.row.status!='1'" type="success" align="center" @click="handleModifyStatus(scope.row,'1')">
                 上架
               </el-button>
-              <el-button v-if="row.status!='draft'" align="center">
+              <el-button v-if="scope.row.status!='0'" align="center" @click="handleModifyStatus(scope.row,'0')">
                 下架
               </el-button>
             </template>
@@ -119,12 +130,25 @@
 // import { fetchList } from '@/api/kechengliebiao'
 
 export default {
+  filters: {
+    statusFilter(status) {
+      if (status < 1) {
+        status = 0
+      }
+      const statusMap = {
+        0: 'info',
+        1: 'success'
+      }
+      return statusMap[status]
+    }
+  },
   data() {
     return {
       putawayUserName: '',
       broadcaster: '',
       categoryName: '',
       list: null,
+      slist: null,
       putawayUserNameList: null,
       broadcasterList: null,
       categoryNameList: null,
@@ -138,7 +162,7 @@ export default {
   created() {
     this.$axios.post('http://192.168.2.51/api/man/v1/course/coursePage', this.listQuery).then(response => {
       console.log(response.data)
-      this.list = response.data.data
+      this.slist = this.list = response.data.data
       this.putawayUserNameList = this.select('putawayUserName')
       this.broadcasterList = this.select('broadcaster')
       this.categoryNameList = this.select('categoryName')
@@ -151,22 +175,24 @@ export default {
   methods: {
     select(p) {
       const newArr = []
-      for (var i = 0; i < this.list.length; i++) {
-        if (newArr.indexOf(this.list[i][p]) === -1) {
-          newArr.push(this.list[i][p])
+      for (var i = 0; i < this.slist.length; i++) {
+        if (newArr.indexOf(this.slist[i][p]) === -1) {
+          newArr.push(this.slist[i][p])
         }
       }
       return newArr
     },
-    selectOne(p) {
+    selectOne(p, l) {
       const newArr = []
-      for (var i = 0; i < this.list.length; i++) {
-        if (this.list[i][p] === this[p]) {
-          newArr.push(this.list[i])
+      for (var i = 0; i < this.slist.length; i++) {
+        if (this.slist[i][p] === this[p]) {
+          newArr.push(this.slist[i])
         }
       }
-      this.list = newArr
-      return this.list
+      this.slist = newArr
+      this.putawayUserNameList = this.select('putawayUserName')
+      this.broadcasterList = this.select('broadcaster')
+      this.categoryNameList = this.select('categoryName')
     },
     timestampToTime(row, column) {
       var date = new Date(row.putawayTime)
@@ -177,6 +203,27 @@ export default {
       var m = date.getMinutes() + ':'
       var s = date.getSeconds()
       return Y + M + D + h + m + s
+    },
+    handleModifyStatus(row, status) {
+      this.$axios.post('http://192.168.2.51/api/man/v1/course/putawayCourse', { no: row.no }).then(response => {
+        row.status = status
+        this.$message({
+          message: '操作Success',
+          type: 'success'
+        })
+      }).catch(error => {
+        console.log(error)
+        alert('网络错误，不能访问')
+      })
+    },
+    resetAll() {
+      this.slist = this.list
+      this.putawayUserNameList = this.select('putawayUserName')
+      this.broadcasterList = this.select('broadcaster')
+      this.categoryNameList = this.select('categoryName')
+      this.putawayUserName = ''
+      this.broadcaster = ''
+      this.categoryName = ''
     }
   // created() {
   //   this.getList()
