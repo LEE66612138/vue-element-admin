@@ -22,7 +22,7 @@
         </el-select>
       </div>
       <div style="float:right; margin-right:10px">
-        <router-link to="kechengluru">
+        <router-link :to="{path: 'kechengluru', query:{broadcasterList:broadcasterList,categoryNameList:categoryNameList}}">
           <el-button type="primary" align="center">
             课程录入
           </el-button>
@@ -225,6 +225,9 @@ export default {
       this.broadcaster = ''
       this.categoryName = ''
     }
+    // show() {
+    //   console.log(this.broadcasterList)
+    // }
   // created() {
   //   this.getList()
   // },
