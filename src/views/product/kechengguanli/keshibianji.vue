@@ -101,7 +101,6 @@ export default {
   // },
   created() {
     this.$axios.post('http://192.168.2.51/api/man/v1/course/queryCourseUnitList', { no: this.$route.query.no }).then(response => {
-      console.log(response.data)
       this.slist = this.list = response.data.data
     }).catch(error => {
       console.log(error)

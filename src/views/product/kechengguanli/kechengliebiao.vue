@@ -161,7 +161,6 @@ export default {
   },
   created() {
     this.$axios.post('http://192.168.2.51/api/man/v1/course/coursePage', this.listQuery).then(response => {
-      console.log(response.data)
       this.slist = this.list = response.data.data
       this.putawayUserNameList = this.select('putawayUserName')
       this.broadcasterList = this.select('broadcaster')
