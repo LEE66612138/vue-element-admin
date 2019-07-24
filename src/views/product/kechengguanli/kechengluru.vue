@@ -101,7 +101,7 @@
           :on-change="changeMainImg"
           :auto-upload="false"
         >
-          <img v-if="mainImgUrl" :src="mainImgUrl" class="avatar">
+          <img v-if="listQuery.mainImgUrl" :src="listQuery.mainImgUrl" class="avatar">
           <i v-else class="el-icon-plus avatar-uploader-icon" />
         </el-upload>
         <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过1M</div>
@@ -116,7 +116,7 @@
           :on-change="changeHeadImg"
           :auto-upload="false"
         >
-          <img v-if="headImgUrl" :src="headImgUrl" class="avatar">
+          <img v-if="listQuery.headImgUrl" :src="listQuery.headImgUrl" class="avatar">
           <i v-else class="el-icon-plus avatar-uploader-icon" />
         </el-upload>
         <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过1M</div>
@@ -129,17 +129,19 @@
 </template>
 
 <script>
+
+// import cos from '@/utils/cos'
 export default {
   data() {
     return {
+      mainImgUrl: '',
+      headImgUrl: '',
       broadcasterList: this.$route.query.broadcasterList,
       categoryNameList: this.$route.query.categoryNameList,
       newCategoryName: '',
       PriceIsShow: false,
       addTagIsShow: false,
       publishTypeIsShow: false,
-      mainImgUrl: '',
-      headImgUrl: '',
       listQuery: {
         courseTitle: '',
         broadcaster: '',
@@ -191,7 +193,7 @@ export default {
       }
     },
     changeMainImg(file) {
-      // const that = this
+      const that = this
       const isJPG = (file.raw.type === 'image/jpeg' || file.raw.type === 'image/png')
       const isLt1M = file.size / 1024 / 1024 < 1
       if (!isJPG) {
@@ -202,21 +204,42 @@ export default {
         this.$message.error('上传图片大小不能超过 1MB!')
         return false
       }
-      const str = this.mainImgUrl = URL.createObjectURL(file.raw)
-      this.listQuery.mainImgUrl = str.substring(5)
-      console.log(file.raw)
-      console.log(str)
-      console.log(this.listQuery.mainImgUrl)
-      // const reader = new FileReader()
-      // reader.readAsDataURL(file.raw)
-      // reader.onload = function() {
-      //   that.mainImgUrl = this.result
-      //   that.listQuery.mainImgUrl = that.mainImgUrl
-      //   console.log(that.mainImgUrl)
-      // }
+      this.mainImgUrl = URL.createObjectURL(file.raw)
+      // this.listQuery.mainImgUrl = str.substring(5)
+      var COS = require('cos-js-sdk-v5')
+
+      // 初始化实例
+      var cos = new COS({
+        getAuthorization: function(options, callback) {
+          // 异步获取临时密钥
+          that.$axios.get(process.env.VUE_APP_BASE_API2 + '/api/v1/cos-upload/getTmpSign', {
+            bucket: options.Bucket,
+            region: options.Region
+          }).then(data => {
+            var credentials = data.data.data
+            callback({
+              TmpSecretId: credentials.tmpSecretId,
+              TmpSecretKey: credentials.tmpSecretKey,
+              XCosSecurityToken: credentials.sessionToken,
+              ExpiredTime: credentials.expiredTime
+            })
+          })
+        }
+      })
+      cos.putObject({
+        Bucket: 'att-rtworld-1252783162',
+        Region: 'ap-shanghai',
+        Key: '/files/' + file.raw.name,
+        Body: file.raw
+      }, function(err, data) {
+        if (err) {
+          console.log(err)
+        }
+        that.listQuery.mainImgUrl = 'http://att.rtworld.com/files/' + file.raw.name
+      })
     },
     changeHeadImg(file) {
-      // const that = this
+      const that = this
       const isJPG = (file.raw.type === 'image/jpeg' || file.raw.type === 'image/png')
       const isLt1M = file.size / 1024 / 1024 < 1
 
@@ -228,13 +251,38 @@ export default {
         this.$message.error('上传图片大小不能超过 1MB!')
         return false
       }
-      const str = this.headImgUrl = URL.createObjectURL(file.raw)
-      this.listQuery.headImgUrl = str.substring(5)
-      // const reader = new FileReader()
-      // reader.readAsDataURL(file.raw)
-      // reader.onloadend = function() {
-      //   that.listQuery.headImgUrl = this.result
-      // }
+      this.headImgUrl = URL.createObjectURL(file.raw)
+      var COS = require('cos-js-sdk-v5')
+
+      // 初始化实例
+      var cos = new COS({
+        getAuthorization: function(options, callback) {
+          // 异步获取临时密钥
+          that.$axios.get(process.env.VUE_APP_BASE_API2 + '/api/v1/cos-upload/getTmpSign', {
+            bucket: options.Bucket,
+            region: options.Region
+          }).then(data => {
+            var credentials = data.data.data
+            callback({
+              TmpSecretId: credentials.tmpSecretId,
+              TmpSecretKey: credentials.tmpSecretKey,
+              XCosSecurityToken: credentials.sessionToken,
+              ExpiredTime: credentials.expiredTime
+            })
+          })
+        }
+      })
+      cos.putObject({
+        Bucket: 'att-rtworld-1252783162',
+        Region: 'ap-shanghai',
+        Key: '/files/' + file.raw.name,
+        Body: file.raw
+      }, function(err, data) {
+        if (err) {
+          console.log(err)
+        }
+        that.listQuery.headImgUrl = 'http://att.rtworld.com/files/' + file.raw.name
+      })
     },
     publish() {
       const obj = this.listQuery
@@ -244,7 +292,7 @@ export default {
           return false
         }
       }
-      this.$axios.post('http://192.168.2.51/api/man/v1/course/createCourse', this.listQuery).then(response => {
+      this.$axios.post(process.env.VUE_APP_BASE_API2 + '/api/man/v1/course/createCourse', this.listQuery).then(response => {
         alert('上传成功')
       }).catch(error => {
         console.log(error)

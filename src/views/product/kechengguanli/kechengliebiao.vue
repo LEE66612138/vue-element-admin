@@ -107,9 +107,9 @@
                   课程编辑
                 </el-button>
               </router-link>
-              <router-link :to="{path: 'keshibianji', query:scope.row}">
+              <router-link :to="{path: 'keshiguanli', query:scope.row}">
                 <el-button type="primary" align="center" style="margin-bottom:5px">
-                  课时编辑
+                  课时管理
                 </el-button>
               </router-link>
               <el-button v-if="scope.row.status!='1'" type="success" align="center" @click="handleModifyStatus(scope.row,'1')">
@@ -160,7 +160,7 @@ export default {
     }
   },
   created() {
-    this.$axios.post('http://192.168.2.51/api/man/v1/course/coursePage', this.listQuery).then(response => {
+    this.$axios.post(process.env.VUE_APP_BASE_API2 + '/api/man/v1/course/coursePage', this.listQuery).then(response => {
       this.slist = this.list = response.data.data
       this.putawayUserNameList = this.select('putawayUserName')
       this.broadcasterList = this.select('broadcaster')
@@ -204,12 +204,19 @@ export default {
       return Y + M + D + h + m + s
     },
     handleModifyStatus(row, status) {
-      this.$axios.post('http://192.168.2.51/api/man/v1/course/putawayCourse', { no: row.no }).then(response => {
-        row.status = status
-        this.$message({
-          message: '操作Success',
-          type: 'success'
-        })
+      this.$axios.post(process.env.VUE_APP_BASE_API2 + '/api/man/v1/course/putawayCourse', { no: row.no }).then(response => {
+        if (response.code === '200') {
+          row.status = status
+          this.$message({
+            message: '操作Success',
+            type: 'success'
+          })
+        } else {
+          this.$message({
+            message: '课程中无课时,无法上架',
+            type: 'error'
+          })
+        }
       }).catch(error => {
         console.log(error)
         alert('网络错误，不能访问')

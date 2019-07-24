@@ -1,7 +1,7 @@
 <template>
   <div>
     <div style="position:absolute; right:160px; top:15px">
-      <router-link to="keshibianji">
+      <router-link to="kechengliebiao">
         <el-button class="pan-btn yellow-btn">返回列表</el-button>
       </router-link>
     </div>
@@ -13,11 +13,23 @@
     <div style="display：inline-block; float:left">
       <span style="color:red">*</span>
       <span>课时名称 :</span>
-      <input type="text">
+      <el-input
+        v-model="listQuery.courseTitle"
+        style="display:inline-block;width:400px"
+        size="medium"
+        placeholder="请输入内容(限制15个字)"
+        maxlength="30"
+      />
     </div>
     <div style="display：inline-block; float:left">
       <span>课时序列 :</span>
-      <input type="text">
+      <el-input
+        v-model="listQuery.courseTitle"
+        style="display:inline-block;width:400px"
+        size="medium"
+        placeholder="请输入内容(限制15个字)"
+        maxlength="30"
+      />
     </div>
     <div style="clear:both" />
     <br>
@@ -57,7 +69,16 @@
   </div></template>
 
 <script>
+export default {
+  data() {
+    return {
+      list: null,
+      listQuery: {
 
+      }
+    }
+  }
+}
 </script>
 
 <style lang="scss" scoped>

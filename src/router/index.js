@@ -92,13 +92,13 @@ export const constantRoutes = [
     path: '/product',
     component: Layout,
     name: 'Dashboard',
-    redirect: '/product/kechengguanli/kechengliebiao',
+    redirect: '/product',
     meta: { title: '产品管理中心', icon: 'documentation', affix: false },
     children: [
       {
         path: 'kechengguanli',
         name: 'kechengguanli',
-        component: () => import('@/views//product/index'),
+        component: () => import('@/views/product/index'),
         alwaysShow: true,
         redirect: 'kechengliebiao',
         meta: { title: '课程管理', icon: '', affix: false },
@@ -117,9 +117,9 @@ export const constantRoutes = [
             meta: { title: '课程录入', icon: '', affix: false }
           },
           {
-            path: 'keshibianji',
-            component: () => import('@/views/product/kechengguanli/keshibianji'),
-            name: 'keshibianji',
+            path: 'keshiguanli',
+            component: () => import('@/views/product/kechengguanli/keshiguanli'),
+            name: 'keshiguanli',
             hidden: true,
             meta: { title: '课时编辑', icon: '', affix: false }
           },

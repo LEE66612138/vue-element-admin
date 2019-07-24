@@ -44,9 +44,7 @@
           </span>
         </el-form-item>
       </el-tooltip>
-
       <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleLogin">登录</el-button>
-
     </el-form>
   </div>
 </template>
@@ -91,6 +89,7 @@ export default {
   watch: {
     $route: {
       handler: function(route) {
+        console.log(route)
         const query = route.query
         if (query) {
           this.redirect = query.redirect
@@ -114,6 +113,9 @@ export default {
     // window.removeEventListener('storage', this.afterQRScan)
   },
   methods: {
+    login() {
+      this.$router.push({ path: '/', query: this.otherQuery })
+    },
     checkCapslock({ shiftKey, key } = {}) {
       if (key && key.length === 1) {
         if (shiftKey && (key >= 'a' && key <= 'z') || !shiftKey && (key >= 'A' && key <= 'Z')) {

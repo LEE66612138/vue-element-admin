@@ -6,7 +6,7 @@
       </router-link>
     </div>
     <div style="position:absolute; right:10px; top:15px">
-      <router-link to="xinzengkeshi">
+      <router-link :to="({path:'xinzengkeshi',query:this.$route.query})">
         <button class="pan-btn light-blue-btn">新增课时</button>
       </router-link>
     </div>
@@ -58,7 +58,7 @@
             <span>{{ scope.row.isSample == 0?'需付费':'可试听' }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="操作" align="center" width="100">
+        <el-table-column label="操作" align="center" width="100" color="blue">
           <router-link to="">编辑</router-link>
         </el-table-column>
 
@@ -72,7 +72,8 @@ export default {
   data() {
     return {
       list: null,
-      slist: null
+      slist: null,
+      no: ''
       // [{
       //   id: '1',
       //   order: '1',
@@ -100,8 +101,10 @@ export default {
   //   }
   // },
   created() {
-    this.$axios.post('http://192.168.2.51/api/man/v1/course/queryCourseUnitList', { no: this.$route.query.no }).then(response => {
+    this.$axios.post(process.env.VUE_APP_BASE_API2 + '/api/man/v1/course/queryCourseUnitList', { no: this.$route.query.no }).then(response => {
       this.slist = this.list = response.data.data
+      this.no = this.$route.query.no
+      console.log(this.list)
     }).catch(error => {
       console.log(error)
       alert('网络错误，不能访问')

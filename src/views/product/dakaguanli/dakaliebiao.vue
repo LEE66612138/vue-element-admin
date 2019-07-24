@@ -116,36 +116,24 @@
 export default {
   data() {
     return {
-      list: [{
-        id: '1',
-        name: '张三',
-        picture: '',
-        job: '一中数学老师',
-        field: '数学',
-        isReply: '3',
-        notReply: '6',
-        courses: '3',
-        fans: '66688',
-        status: '已上架',
-        timestamp: '2019-05-02 05:20',
-        reviewer: '管理员一'
-      },
-      {
-        id: '2',
-        name: '李四',
-        picture: '',
-        job: '一中英语老师',
-        field: '英语',
-        isReply: '5',
-        notReply: '2',
-        courses: '1',
-        fans: '6846',
-        status: '未上架',
-        timestamp: '2018-07-15 10:40',
-        reviewer: '管理员二'
+      slist: null,
+      list: null,
+      listQuery: {
+        page: 1,
+        pageSize: 40
       }
-      ]
+
     }
+  },
+  created() {
+    this.$axios.post('http://192.168.2.51/api/man/v1/expert/expertPage', this.listQuery).then(response => {
+      this.slist = this.list = response.data.data
+      this.putawayUserNameList = this.select('putawayUserName')
+      this.listLoading = false
+    }).catch(error => {
+      console.log(error)
+      alert('网络错误，不能访问')
+    })
   }
 }
 </script>
