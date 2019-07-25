@@ -142,31 +142,19 @@ export default {
       addTagIsShow: false,
       publishTypeIsShow: false,
       listQuery: {
-        courseTitle: '',
-        broadcaster: '',
-        courseAbstract: '',
-        courseType: '1',
-        categoryName: '',
-        currencyType: '0',
-        price: '0',
-        publishType: '0',
-        classTotalNum: '0',
-        mainImgUrl: '',
-        headImgUrl: '',
+        no: this.$route.query.no,
+        courseTitle: this.$route.query.courseTitle,
+        broadcaster: this.$route.query.broadcaster,
+        courseAbstract: this.$route.query.courseAbstract,
+        courseType: this.$route.query.courseType,
+        categoryName: this.$route.query.categoryName,
+        currencyType: this.$route.query.currencyType,
+        price: this.$route.query.price,
+        publishType: this.$route.query.publishType,
+        classTotalNum: this.$route.query.classTotalNum,
+        mainImgUrl: this.$route.query.mainImgUrl,
+        headImgUrl: this.$route.query.headImgUrl,
         status: '0'
-      }
-    }
-  },
-  watch: {
-    price: function() {
-      var elValue = this.price
-      var reg = /^(0|[1-9][0-9]{0,4})(\.([1-9]|[0-9][1-9]))?$/
-      if (!elValue.match(reg)) {
-        this.price = ''
-        alert('请输入正确价格')
-        return false
-      } else {
-        return true
       }
     }
   },
@@ -284,6 +272,7 @@ export default {
       })
     },
     publish() {
+      console.log(this.$route.query.no)
       const obj = this.listQuery
       for (const p in obj) {
         if (obj[p] === '') {
@@ -291,7 +280,7 @@ export default {
           return false
         }
       }
-      this.$axios.post(process.env.VUE_APP_BASE_API2 + '/api/man/v1/course/createCourse', this.listQuery).then(response => {
+      this.$axios.post(process.env.VUE_APP_BASE_API2 + '/api/man/v1/course/editCourse', this.listQuery).then(response => {
         alert('上传成功')
       }).catch(error => {
         console.log(error)

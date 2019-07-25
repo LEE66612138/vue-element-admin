@@ -102,7 +102,7 @@
           </el-table-column>
           <el-table-column label="操作" align="center" width="230" class-name="small-padding fixed-width">
             <template slot-scope="scope">
-              <router-link to="kechengluru">
+              <router-link :to="{path: 'kechengbianji', query:scope.row}">
                 <el-button type="primary" align="center" style="margin-bottom:5px">
                   课程编辑
                 </el-button>
@@ -205,7 +205,8 @@ export default {
     },
     handleModifyStatus(row, status) {
       this.$axios.post(process.env.VUE_APP_BASE_API2 + '/api/man/v1/course/putawayCourse', { no: row.no }).then(response => {
-        if (response.code === '200') {
+        console.log(response.data.code)
+        if (response.data.code === 200) {
           row.status = status
           this.$message({
             message: '操作Success',
@@ -213,7 +214,7 @@ export default {
           })
         } else {
           this.$message({
-            message: '课程中无课时,无法上架',
+            message: '操作失败',
             type: 'error'
           })
         }

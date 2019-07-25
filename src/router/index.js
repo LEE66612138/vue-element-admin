@@ -110,6 +110,13 @@ export const constantRoutes = [
             meta: { title: '课程列表', icon: '', affix: false }
           },
           {
+            path: 'kechengbianji',
+            component: () => import('@/views/product/kechengguanli/kechengbianji'),
+            name: 'kechengbianji',
+            hidden: true,
+            meta: { title: '课程编辑', icon: '', affix: false }
+          },
+          {
             path: 'kechengluru',
             component: () => import('@/views/product/kechengguanli/kechengluru'),
             name: 'kechengluru',
