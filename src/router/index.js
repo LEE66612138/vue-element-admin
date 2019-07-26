@@ -173,6 +173,13 @@ export const constantRoutes = [
             meta: { title: '大咖录入', icon: '', affix: false }
           },
           {
+            path: 'dakabianji',
+            component: () => import('@/views/product/dakaguanli/dakabianji'),
+            name: 'dakabianji',
+            hidden: true,
+            meta: { title: '大咖编辑', icon: '', affix: false }
+          },
+          {
             path: 'dakaxiangqing',
             component: () => import('@/views/product/dakaguanli/dakaxiangqing'),
             name: 'dakaxiangqing',

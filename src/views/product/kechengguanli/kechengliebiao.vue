@@ -58,7 +58,7 @@
           </el-table-column>
           <el-table-column label="课程类型" align="center" min-width="80px">
             <template slot-scope="scope">
-              <span>{{ scope.row.courseType }}</span>
+              <span>{{ scope.row.courseType == '1'?'音频':'视频' }}</span>
             </template>
           </el-table-column>
           <el-table-column label="总课时" align="center" min-width="100px">

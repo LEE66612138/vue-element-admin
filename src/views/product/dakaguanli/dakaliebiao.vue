@@ -89,12 +89,12 @@
         </el-table-column>
         <el-table-column label="操作" align="center" width="230" class-name="small-padding fixed-width">
           <template slot-scope="scope">
-            <router-link to="kechengluru">
+            <router-link :to="{path: 'dakabianji', query:scope.row}">
               <el-button type="primary" align="center" style="margin-bottom:5px">
                 大咖编辑
               </el-button>
             </router-link>
-            <router-link :to="{path: 'keshiguanli', query:scope.row}">
+            <router-link :to="{path: 'dakaxiangqing', query:scope.row}">
               <el-button type="primary" align="center" style="margin-bottom:5px">
                 大咖详情
               </el-button>
@@ -146,6 +146,7 @@ export default {
       this.putawayUserNameList = this.select('putawayUserName')
       this.industryNameList = this.select('industryName')
       this.listLoading = false
+      console.log(this.putawayUserNameList)
     }).catch(error => {
       console.log(error)
       alert('网络错误，不能访问')

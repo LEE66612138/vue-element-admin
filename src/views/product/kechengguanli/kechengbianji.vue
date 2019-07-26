@@ -7,7 +7,7 @@
     </div>
     <div style="position:absolute; right:10px; top:15px">
       <router-link to="">
-        <button class="pan-btn light-blue-btn" @click="publish">课程发布</button>
+        <button class="pan-btn light-blue-btn" @click="publish()">课程发布</button>
       </router-link>
     </div>
     <form action="">
@@ -272,7 +272,6 @@ export default {
       })
     },
     publish() {
-      console.log(this.$route.query.no)
       const obj = this.listQuery
       for (const p in obj) {
         if (obj[p] === '') {
@@ -281,7 +280,11 @@ export default {
         }
       }
       this.$axios.post(process.env.VUE_APP_BASE_API2 + '/api/man/v1/course/editCourse', this.listQuery).then(response => {
-        alert('上传成功')
+        if (response.data.code === 200) {
+          alert('上传成功')
+        } else {
+          alert('上传失败')
+        }
       }).catch(error => {
         console.log(error)
         alert('网络错误，不能访问')

@@ -57,6 +57,8 @@
       <span>课时上传 :</span>
       <el-upload
         action=""
+        multiple
+        :file-list="fileList"
         :on-change="changeFileUrl"
         :auto-upload="false"
         :limit="1"
@@ -88,6 +90,7 @@ export default {
   data() {
     return {
       list: null,
+      fileList: [],
       listQuery: {
         courseNo: this.$route.query.no,
         unitTitle: '',
@@ -125,7 +128,8 @@ export default {
       const isTrue = (file.raw.type === 'audio/mp4' || file.raw.type === 'video/mp4' || file.raw.type === 'audio/mpeg')
 
       if (!isTrue) {
-        this.$message.error('上传图片只能是 MP3或MP4 格式!')
+        this.$message.error('上传只能是 MP3或MP4 格式!')
+        this.fileList = []
         return false
       }
       var COS = require('cos-js-sdk-v5')
