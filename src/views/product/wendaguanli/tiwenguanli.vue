@@ -11,7 +11,7 @@
     <div style="display:inline-block;margin-left:50px;font-size:17px">
       <span>问题状态:</span>
       <el-select v-model="isInvalid" style="display:inline-block" @change="selectOne('isInvalid','isInvalidList')">
-        <el-option v-for="item in isInvalidList" :key="item" :label="item" :value="item" />
+        <el-option v-for="item in isInvalidList" :key="item" :label="selectStatus(item)" :value="item" />
       </el-select>
     </div>
     <div style="float:right;margin-right:10px">
@@ -67,9 +67,7 @@
         </el-table-column>
         <el-table-column label="状态" class-name="status-col" align="center" width="100">
           <template slot-scope="scope">
-            <e-tag>
-              {{ selectStatus(scope.row.isInvalid) }}
-            </e-tag>
+            {{ selectStatus(scope.row.isInvalid) }}
           </template>
         </el-table-column>
         <el-table-column :show-overflow-tooltip="true" label="备注" width="150px" align="center">
@@ -86,7 +84,7 @@
               </el-button>
             </router-link>
             <router-link :to="{path: 'wanju', query:scope.row}">
-              <el-button type="primary" align="center" @click="refuse(scope.row,'2')">
+              <el-button type="primary" align="center">
                 婉拒
               </el-button>
             </router-link>

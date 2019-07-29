@@ -59,7 +59,9 @@
           </template>
         </el-table-column>
         <el-table-column label="操作" align="center" width="100" color="blue">
-          <router-link to="">编辑</router-link>
+          <template slot-scope="scope">
+            <router-link :to="{path: 'keshibianji', query:scope.row}">编辑</router-link>
+          </template>
         </el-table-column>
 
       </el-table>

@@ -138,6 +138,13 @@ export const constantRoutes = [
             meta: { title: '新增课时', icon: '', affix: false }
           },
           {
+            path: 'keshibianji',
+            component: () => import('@/views/product/kechengguanli/keshibianji'),
+            name: 'keshibianji',
+            hidden: true,
+            meta: { title: '课时编辑', icon: '', affix: false }
+          },
+          {
             path: 'xinbiaoqian',
             component: () => import('@/views/product/kechengguanli/xinbiaoqian'),
             name: 'xinbiaoqian',
@@ -238,6 +245,20 @@ export const constantRoutes = [
             component: () => import('@/views/product/wendaguanli/wendarizhi'),
             name: 'wendarizhi',
             meta: { title: '问答日志', icon: '', affix: false }
+          },
+          {
+            path: 'wanju',
+            component: () => import('@/views/product/wendaguanli/wanju'),
+            name: 'wanju',
+            hidden: true,
+            meta: { title: '婉拒', icon: '', affix: false }
+          },
+          {
+            path: 'huidaxiangqing',
+            component: () => import('@/views/product/wendaguanli/huidaxiangqing'),
+            name: 'huidaxiangqing',
+            hidden: true,
+            meta: { title: '回答详情', icon: '', affix: false }
           }
         ]
       }

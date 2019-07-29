@@ -146,7 +146,6 @@ export default {
       this.putawayUserNameList = this.select('putawayUserName')
       this.industryNameList = this.select('industryName')
       this.listLoading = false
-      console.log(this.putawayUserNameList)
     }).catch(error => {
       console.log(error)
       alert('网络错误，不能访问')

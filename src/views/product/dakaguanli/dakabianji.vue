@@ -95,9 +95,9 @@
       >
         <el-option
           v-for="item in industryNameList"
-          :key="item"
-          :label="item"
-          :value="item"
+          :key="item.labelName"
+          :label="item.labelName"
+          :value="item.labelName"
         />
       </el-select>
       <el-input v-model="newIndustryName" size="small" style="display:inline-block;width:200px;margin-left:50px" />
@@ -138,8 +138,17 @@ export default {
         status: '0'
       },
       newIndustryName: '',
-      industryNameList: this.$route.query.industryNameList
+      industryNameList: ''
     }
+  },
+  created() {
+    this.$axios.post(process.env.VUE_APP_BASE_API2 + '/api/man/v1/lable/queryList', {}).then(response => {
+      this.industryNameList = response.data.data
+      console.log(response.data.data)
+    }).catch(error => {
+      console.log(error)
+      alert('网络错误，不能访问')
+    })
   },
   methods: {
     selectThree() {
@@ -265,7 +274,16 @@ export default {
         this.$message.error('此处不能为空')
         return false
       }
-      this.industryNameList.push(this.newIndustryName)
+      this.$axios.post(process.env.VUE_APP_BASE_API2 + '/api/man/v1/lable/addLable', { labelName: this.newIndustryName, labelType: '4', sortNum: '1' }).then(response => {
+        if (response.data.code === 200) {
+          alert('上传成功')
+        } else {
+          alert('上传失败')
+        }
+      }).catch(error => {
+        console.log(error)
+        alert('网络错误，不能访问')
+      })
       this.newIndustryName = ''
     }
   }

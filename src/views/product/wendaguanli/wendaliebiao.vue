@@ -33,7 +33,8 @@
         <span style="margin-left:40px">{{ item.answerUserName }}</span>
         <br>
         <br>
-        <svg-icon class="smallPicture" icon-class="hourglass" />
+        <svg-icon v-if="item.urgentCount==0" class="smallPicture" icon-class="question" />
+        <svg-icon v-if="item.urgentCount>0" class="smallPicture" icon-class="hourglass" />
         <span>待回答：</span>
         <span>{{ item.userSize }}</span>
       </li>

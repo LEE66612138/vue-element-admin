@@ -1,11 +1,17 @@
 <template>
   <div>
+    <div style="position:absolute; right:160px; top:15px">
+      <router-link to="tiwenguanli">
+        <el-button class="pan-btn yellow-btn">返回列表</el-button>
+      </router-link>
+    </div>
     <h1>婉拒理由</h1>
     <el-input
       v-model="listQuery.remarks"
       style="display:inline-block;width:400px"
       size="medium"
       type="textarea"
+      placeholder="必须输入拒绝的理由，限制最少输入10个汉字"
     />
     <el-button @click="publish()">提交</el-button>
   </div>
@@ -16,16 +22,17 @@ export default {
   data() {
     return {
       listQuery: {
-        no: this.$router.query.no,
-        remarks: ''
+        no: this.$route.query.no,
+        remarks: this.$route.query.remarks
       }
     }
   },
   methods: {
     publish() {
       const obj = this.listQuery
-      if (this.listQuery.remarks.length < 15) {
-        this.$message.error('不可少于15字')
+      if (obj.remarks.length < 10) {
+        this.$message.error('不可少于10字')
+        return false
       }
       for (const p in obj) {
         if (obj[p] === '') {
