@@ -44,7 +44,8 @@
           </span>
         </el-form-item>
       </el-tooltip>
-      <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleLogin">登录</el-button>
+      <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click="handleLogin()">登录</el-button>
+      <!-- <button type="button" @click="go()">123</button> -->
     </el-form>
   </div>
 </template>
@@ -53,7 +54,7 @@
 import { validUsername } from '@/utils/validate'
 
 export default {
-  name: 'Login',
+  // name: 'Login',
   data() {
     const validateUsername = (rule, value, callback) => {
       if (!validUsername(value)) {
@@ -71,8 +72,10 @@ export default {
     }
     return {
       loginForm: {
-        username: 'admin',
-        password: '111111'
+        // username: 'admin',
+        // password: '111111'
+        username: 'rtadmin',
+        password: 'rtmz!QAZ0118'
       },
       loginRules: {
         username: [{ required: true, trigger: 'blur', validator: validateUsername }],
@@ -86,19 +89,19 @@ export default {
       otherQuery: {}
     }
   },
-  watch: {
-    $route: {
-      handler: function(route) {
-        console.log(route)
-        const query = route.query
-        if (query) {
-          this.redirect = query.redirect
-          this.otherQuery = this.getOtherQuery(query)
-        }
-      },
-      immediate: true
-    }
-  },
+  // watch: {
+  //   $route: {
+  //     handler: function(route) {
+  //       console.log(route)
+  //       const query = route.query
+  //       if (query) {
+  //         this.redirect = query.redirect
+  //         this.otherQuery = this.getOtherQuery(query)
+  //       }
+  //     },
+  //     immediate: true
+  //   }
+  // },
   created() {
     // window.addEventListener('storage', this.afterQRScan)
   },
@@ -113,9 +116,12 @@ export default {
     // window.removeEventListener('storage', this.afterQRScan)
   },
   methods: {
-    login() {
-      this.$router.push({ path: '/', query: this.otherQuery })
-    },
+    // login() {
+    //   this.$router.push({ path: '/', query: this.otherQuery })
+    // },
+    // go() {
+    //   this.$router.push({ path: '/' })
+    // },
     checkCapslock({ shiftKey, key } = {}) {
       if (key && key.length === 1) {
         if (shiftKey && (key >= 'a' && key <= 'z') || !shiftKey && (key >= 'A' && key <= 'Z')) {
@@ -139,33 +145,58 @@ export default {
       })
     },
     handleLogin() {
-      this.$refs.loginForm.validate(valid => {
-        if (valid) {
-          this.loading = true
-          this.$store.dispatch('user/login', this.loginForm)
-            .then(() => {
-              this.$router.push({ path: this.redirect || '/', query: this.otherQuery })
-              this.loading = false
-              console.log(this)
-            })
-            .catch(() => {
-              this.loading = false
-              console.log(this)
-            })
+      const that = this
+      this.$axios.post(process.env.VUE_APP_BASE_API2 + '/api/man/v1/login/doLogin', { userName: this.loginForm.username, passWord: this.loginForm.password }).then(response => {
+        if (response.data.code === 200) {
+          that.$router.push({ path: '/product/kechengguanli/kechengliebiao' })
+          // alert('登陆成功')
         } else {
-          console.log('error submit!!')
-          return false
+          alert('登录失败')
         }
+      }).catch(error => {
+        console.log(error)
+        alert('网络错误，不能访问')
       })
-    },
-    getOtherQuery(query) {
-      return Object.keys(query).reduce((acc, cur) => {
-        if (cur !== 'redirect') {
-          acc[cur] = query[cur]
-        }
-        return acc
-      }, {})
+
+      // this.$store.dispatch('user/login', this.loginForm)
+      //   .then(() => {
+      //     this.$router.push({ path: '/' })
+      //     this.loading = false
+      //     console.log(456)
+      //   })
+      //   .catch(() => {
+      //     this.loading = false
+      //     console.log(123)
+      //   })
+
+      // this.$refs.loginForm.validate(valid => {
+      //   if (valid) {
+      //     this.loading = true
+      //     this.$store.dispatch('user/login', this.loginForm)
+      //       .then(() => {
+      //         this.$router.push({ path: '/' })
+      //         this.loading = false
+      //         console.log(this)
+      //       })
+      //       .catch(() => {
+      //         this.loading = false
+      //         console.log(this)
+      //       })
+      //   } else {
+      //     console.log('error submit!!')
+      //     return false
+      //   }
+      // })
     }
+    // getOtherQuery(query) {
+    //   return Object.keys(query).reduce((acc, cur) => {
+    //     if (cur !== 'redirect') {
+    //       acc[cur] = query[cur]
+    //     }
+    //     return acc
+    //   }, {})
+    // }
+
     // afterQRScan() {
     //   if (e.key === 'x-admin-oauth-code') {
     //     const code = getQueryObject(e.newValue)

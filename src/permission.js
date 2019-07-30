@@ -20,17 +20,23 @@ router.beforeEach(async(to, from, next) => {
   // determine whether the user has logged in
   const hasToken = getToken()
 
+  // next({ path: '/' })
+  //     NProgress.done()
+
   if (hasToken) {
     if (to.path === '/login') {
       // if is logged in, redirect to the home page
       next({ path: '/' })
       NProgress.done()
+      console.log(1)
     } else {
       // determine whether the user has obtained his permission roles through getInfo
+      console.log(2)
       const hasRoles = store.getters.roles && store.getters.roles.length > 0
       if (hasRoles) {
         next()
       } else {
+        console.log(4)
         try {
           // get user info
           // note: roles must be a object array! such as: ['admin'] or ,['developer','editor']
@@ -46,6 +52,7 @@ router.beforeEach(async(to, from, next) => {
           // set the replace: true, so the navigation will not leave a history record
           next({ ...to, replace: true })
         } catch (error) {
+          console.log(5)
           // remove token and go to login page to re-login
           await store.dispatch('user/resetToken')
           Message.error(error || 'Has Error')
@@ -56,11 +63,12 @@ router.beforeEach(async(to, from, next) => {
     }
   } else {
     /* has no token*/
-
     if (whiteList.indexOf(to.path) !== -1) {
+      console.log(6)
       // in the free login whitelist, go directly
       next()
     } else {
+      console.log(7)
       // other pages that do not have permission to access are redirected to the login page.
       next(`/login?redirect=${to.path}`)
       NProgress.done()

@@ -72,7 +72,7 @@
         <input
           v-show="PriceIsShow"
           v-model="listQuery.price"
-          type="text"
+          type="number"
           style="display:inline-block;width:100px"
         >
       </div>
@@ -157,19 +157,19 @@ export default {
       }
     }
   },
-  watch: {
-    price: function() {
-      var elValue = this.price
-      var reg = /^(0|[1-9][0-9]{0,4})(\.([1-9]|[0-9][1-9]))?$/
-      if (!elValue.match(reg)) {
-        this.price = ''
-        alert('请输入正确价格')
-        return false
-      } else {
-        return true
-      }
-    }
-  },
+  // watch: {
+  //   price: function() {
+  //     var elValue = this.price
+  //     var reg = /^(0|[1-9][0-9]{0,4})(\.([1-9]|[0-9][1-9]))?$/
+  //     if (!elValue.match(reg)) {
+  //       this.price = ''
+  //       alert('请输入正确价格')
+  //       return false
+  //     } else {
+  //       return true
+  //     }
+  //   }
+  // },
   methods: {
     addPrice() {
       this.PriceIsShow = false

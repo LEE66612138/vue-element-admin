@@ -72,7 +72,7 @@
         <input
           v-show="PriceIsShow"
           v-model="listQuery.price"
-          type="text"
+          type="number"
           style="display:inline-block;width:100px"
         >
       </div>

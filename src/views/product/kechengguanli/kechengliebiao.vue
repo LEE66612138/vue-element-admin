@@ -172,6 +172,9 @@ export default {
     })
   },
   methods: {
+    go() {
+      this.$router.push({ path: '/' })
+    },
     select(p) {
       const newArr = []
       for (var i = 0; i < this.slist.length; i++) {

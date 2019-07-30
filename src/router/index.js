@@ -53,11 +53,11 @@ export const constantRoutes = [
     component: () => import('@/views/login/index'),
     hidden: true
   },
-  {
-    path: '/auth-redirect',
-    component: () => import('@/views/login/auth-redirect'),
-    hidden: true
-  },
+  // {
+  //   path: '/auth-redirect',
+  //   component: () => import('@/views/login/auth-redirect'),
+  //   hidden: true
+  // },
   {
     path: '/404',
     component: () => import('@/views/error-page/404'),
@@ -154,6 +154,7 @@ export const constantRoutes = [
             path: 'kechengrizhi',
             component: () => import('@/views/product/kechengguanli/kechengrizhi'),
             name: 'kechengrizhi',
+            hidden: true,
             meta: { title: '课程日志', icon: '', affix: false }
           }
         ]
@@ -203,6 +204,7 @@ export const constantRoutes = [
             path: 'dakarizhi',
             component: () => import('@/views/product/dakaguanli/dakarizhi'),
             name: 'dakarizhi',
+            hidden: true,
             meta: { title: '大咖日志', icon: '', affix: false }
           }
         ]
@@ -244,6 +246,7 @@ export const constantRoutes = [
             path: 'wendarizhi',
             component: () => import('@/views/product/wendaguanli/wendarizhi'),
             name: 'wendarizhi',
+            hidden: true,
             meta: { title: '问答日志', icon: '', affix: false }
           },
           {
@@ -260,10 +263,12 @@ export const constantRoutes = [
             hidden: true,
             meta: { title: '回答详情', icon: '', affix: false }
           }
+
         ]
       }
     ]
   }
+
 ]
 //   {
 //     path: '/documentation',

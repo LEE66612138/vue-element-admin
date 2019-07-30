@@ -138,13 +138,15 @@ export default {
         status: '0'
       },
       newIndustryName: '',
-      industryNameList: ''
+      industryNameList: '',
+      list: null
     }
   },
   created() {
     this.$axios.post(process.env.VUE_APP_BASE_API2 + '/api/man/v1/lable/queryList', {}).then(response => {
       this.industryNameList = response.data.data
       console.log(response.data.data)
+      console.log(this.$route.query.industryName)
     }).catch(error => {
       console.log(error)
       alert('网络错误，不能访问')

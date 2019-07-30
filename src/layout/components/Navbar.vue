@@ -6,25 +6,25 @@
 
     <div class="right-menu">
       <template v-if="device!=='mobile'">
-        <search id="header-search" class="right-menu-item" />
+        <!-- <search id="header-search" class="right-menu-item" /> -->
 
         <error-log class="errLog-container right-menu-item hover-effect" />
 
         <screenfull id="screenfull" class="right-menu-item hover-effect" />
 
-        <el-tooltip content="Global Size" effect="dark" placement="bottom">
+        <!-- <el-tooltip content="Global Size" effect="dark" placement="bottom">
           <size-select id="size-select" class="right-menu-item hover-effect" />
-        </el-tooltip>
+        </el-tooltip> -->
 
       </template>
 
       <el-dropdown class="avatar-container right-menu-item hover-effect" trigger="click">
         <div class="avatar-wrapper">
-          <img :src="avatar+'?imageView2/1/w/80/h/80'" class="user-avatar">
+          <img :src="avatarUrl" class="user-avatar">
           <i class="el-icon-caret-bottom" />
         </div>
         <el-dropdown-menu slot="dropdown">
-          <router-link to="/profile/index">
+          <!-- <router-link to="/profile/index">
             <el-dropdown-item>Profile</el-dropdown-item>
           </router-link>
           <router-link to="/">
@@ -35,7 +35,7 @@
           </a>
           <a target="_blank" href="https://panjiachen.github.io/vue-element-admin-site/#/">
             <el-dropdown-item>Docs</el-dropdown-item>
-          </a>
+          </a> -->
           <el-dropdown-item divided>
             <span style="display:block;" @click="logout">Log Out</span>
           </el-dropdown-item>
@@ -51,17 +51,18 @@ import Breadcrumb from '@/components/Breadcrumb'
 import Hamburger from '@/components/Hamburger'
 import ErrorLog from '@/components/ErrorLog'
 import Screenfull from '@/components/Screenfull'
-import SizeSelect from '@/components/SizeSelect'
-import Search from '@/components/HeaderSearch'
 
 export default {
   components: {
     Breadcrumb,
     Hamburger,
     ErrorLog,
-    Screenfull,
-    SizeSelect,
-    Search
+    Screenfull
+  },
+  data() {
+    return {
+      avatarUrl: ''
+    }
   },
   computed: {
     ...mapGetters([
@@ -70,13 +71,32 @@ export default {
       'device'
     ])
   },
+  created() {
+    this.$axios.post(process.env.VUE_APP_BASE_API2 + '/api/man/v1/login/state', {}).then(response => {
+      this.avatarUrl = response.data.avatar
+      this.listLoading = false
+    }).catch(error => {
+      console.log(error)
+      alert('网络错误，不能访问')
+    })
+  },
   methods: {
     toggleSideBar() {
       this.$store.dispatch('app/toggleSideBar')
     },
-    async logout() {
-      await this.$store.dispatch('user/logout')
-      this.$router.push(`/login?redirect=${this.$route.fullPath}`)
+    logout() {
+      this.$axios.post(process.env.VUE_APP_BASE_API2 + '/api/man/v1/login/doLogout', {}).then(response => {
+        if (response.data.code === 200) {
+          this.$router.push({ path: '/login' })
+        } else {
+          alert('退出登录失败')
+        }
+      }).catch(error => {
+        console.log(error)
+        alert('网络错误，不能访问')
+      })
+      // this.$store.dispatch('user/logout')
+      // this.$router.push({ path: '/login' })
     }
   }
 }

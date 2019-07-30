@@ -62,7 +62,7 @@
         </el-table-column>
         <el-table-column label="回答倒计时" align="center" width="100px">
           <template slot-scope="scope">
-            <span>{{ scope.row.countDown }}</span>
+            <span>{{ toTime(scope.row.countDown) }}</span>
           </template>
         </el-table-column>
         <el-table-column label="状态" class-name="status-col" align="center" width="100">
@@ -147,6 +147,16 @@ export default {
       var m = date.getMinutes() + ':'
       var s = date.getSeconds()
       return Y + M + D + h + m + s
+    },
+    toTime(time) {
+      if (time < 0) {
+        return 0
+      }
+      const days = Math.floor(time / (1000 * 60 * 60 * 24))
+      const hours = Math.floor((time % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60))
+      const minutes = Math.floor((time % (1000 * 60 * 60)) / (1000 * 60))
+      const seconds = Math.round((time % (1000 * 60)) / 1000)
+      return days + '天' + hours + '小时' + minutes + '分钟' + seconds + '秒'
     },
     selectStatus(p) {
       if (p === 0) {
