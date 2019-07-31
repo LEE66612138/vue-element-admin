@@ -108,7 +108,7 @@ export default {
     }
   },
   created() {
-    this.$axios.post(process.env.VUE_APP_BASE_API2 + '/api/man/v1/question/userQuestion', {}).then(response => {
+    this.$axios.post(process.env.VUE_APP_BASE_API + '/api/man/v1/question/userQuestion', {}).then(response => {
       this.slist = this.list = response.data.data
       this.answerUserNameList = this.select('answerUserName')
       this.isInvalidList = this.select('isInvalid')
@@ -175,7 +175,7 @@ export default {
       this.isInvalid = ''
     },
     refuse(row, isInvalid) {
-      this.$axios.post(process.env.VUE_APP_BASE_API2 + '/api/man/v1/question/declineAnswer', { no: row.no }).then(response => {
+      this.$axios.post(process.env.VUE_APP_BASE_API + '/api/man/v1/question/declineAnswer', { no: row.no }).then(response => {
         row.isInvalid = isInvalid
         if (response.data.code === 200) {
           alert('上传成功')

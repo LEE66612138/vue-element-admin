@@ -28,51 +28,75 @@ router.beforeEach(async(to, from, next) => {
       // if is logged in, redirect to the home page
       next({ path: '/' })
       NProgress.done()
-      console.log(1)
+      // console.log(1)
     } else {
       // determine whether the user has obtained his permission roles through getInfo
-      console.log(2)
-      const hasRoles = store.getters.roles && store.getters.roles.length > 0
-      if (hasRoles) {
+      // console.log(2)
+      // const hasRoles = store.getters.roles && store.getters.roles.length > 0
+      // console.log(store.getters)
+      try {
+        // get user info
+        // note: roles must be a object array! such as: ['admin'] or ,['developer','editor']
+        // console.log(9582)
+        // generate accessible routes map based on roles
+        const accessRoutes = await store.dispatch('permission/generateRoutes')
+        // console.log(7894)
+        // dynamically add accessible routes
+        router.addRoutes(accessRoutes)
+
+        // hack method to ensure that addRoutes is complete
+        // set the replace: true, so the navigation will not leave a history record
         next()
-      } else {
-        console.log(4)
-        try {
-          // get user info
-          // note: roles must be a object array! such as: ['admin'] or ,['developer','editor']
-          const { roles } = await store.dispatch('user/getInfo')
-
-          // generate accessible routes map based on roles
-          const accessRoutes = await store.dispatch('permission/generateRoutes', roles)
-
-          // dynamically add accessible routes
-          router.addRoutes(accessRoutes)
-
-          // hack method to ensure that addRoutes is complete
-          // set the replace: true, so the navigation will not leave a history record
-          next({ ...to, replace: true })
-        } catch (error) {
-          console.log(5)
-          // remove token and go to login page to re-login
-          await store.dispatch('user/resetToken')
-          Message.error(error || 'Has Error')
-          next(`/login?redirect=${to.path}`)
-          NProgress.done()
-        }
+      } catch (error) {
+        // console.log(5)
+        // remove token and go to login page to re-login
+        await store.dispatch('user/resetToken')
+        Message.error(error || 'Has Error')
+        next(`/login?redirect=${to.path}`)
+        NProgress.done()
       }
+      //   if (hasRoles) {
+      //     next()
+      //   } else {
+      //     console.log(4)
+      //     try {
+      //       // get user info
+      //       // note: roles must be a object array! such as: ['admin'] or ,['developer','editor']
+      //       const { roles } = await store.dispatch('user/getInfo')
+
+      //       // generate accessible routes map based on roles
+      //       const accessRoutes = await store.dispatch('permission/generateRoutes', roles)
+
+      //       // dynamically add accessible routes
+      //       router.addRoutes(accessRoutes)
+
+    //       // hack method to ensure that addRoutes is complete
+    //       // set the replace: true, so the navigation will not leave a history record
+    //       next({ ...to, replace: true })
+    //     } catch (error) {
+    //       console.log(5)
+    //       // remove token and go to login page to re-login
+    //       await store.dispatch('user/resetToken')
+    //       Message.error(error || 'Has Error')
+    //       next(`/login?redirect=${to.path}`)
+    //       NProgress.done()
+    //     }
+    //   }
     }
   } else {
     /* has no token*/
     if (whiteList.indexOf(to.path) !== -1) {
-      console.log(6)
+      // console.log(6)
       // in the free login whitelist, go directly
       next()
     } else {
-      console.log(7)
+      // console.log(7)
       // other pages that do not have permission to access are redirected to the login page.
       next(`/login?redirect=${to.path}`)
       NProgress.done()
     }
+
+    // next({ path: '/login' })
   }
 })
 

@@ -155,12 +155,15 @@ export default {
       listLoading: true,
       listQuery: {
         page: 1,
-        pageSize: 40
+        pageSize: 10
       }
     }
   },
+
   created() {
-    this.$axios.post(process.env.VUE_APP_BASE_API2 + '/api/man/v1/course/coursePage', this.listQuery).then(response => {
+    // this.getList()
+
+    this.$axios.post(process.env.VUE_APP_BASE_API + '/api/man/v1/course/coursePage', this.listQuery).then(response => {
       this.slist = this.list = response.data.data
       this.putawayUserNameList = this.select('putawayUserName')
       this.broadcasterList = this.select('broadcaster')
@@ -171,10 +174,20 @@ export default {
       alert('网络错误，不能访问')
     })
   },
+
   methods: {
-    go() {
-      this.$router.push({ path: '/' })
-    },
+    // getList() {
+    //   fetchList(this.listQuery).then(response => {
+    //     this.slist = this.list = response.data.data
+    //     this.putawayUserNameList = this.select('putawayUserName')
+    //     this.broadcasterList = this.select('broadcaster')
+    //     this.categoryNameList = this.select('categoryName')
+    //     this.listLoading = false
+    //   }).catch(error => {
+    //     console.log(error)
+    //     alert('网络错误，不能访问')
+    //   })
+    // },
     select(p) {
       const newArr = []
       for (var i = 0; i < this.slist.length; i++) {
@@ -207,7 +220,7 @@ export default {
       return Y + M + D + h + m + s
     },
     handleModifyStatus(row, status) {
-      this.$axios.post(process.env.VUE_APP_BASE_API2 + '/api/man/v1/course/putawayCourse', { no: row.no }).then(response => {
+      this.$axios.post(process.env.VUE_APP_BASE_API + '/api/man/v1/course/putawayCourse', { no: row.no }).then(response => {
         console.log(response.data.code)
         if (response.data.code === 200) {
           row.status = status

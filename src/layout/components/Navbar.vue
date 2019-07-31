@@ -20,7 +20,7 @@
 
       <el-dropdown class="avatar-container right-menu-item hover-effect" trigger="click">
         <div class="avatar-wrapper">
-          <img :src="avatarUrl" class="user-avatar">
+          <img :src="avatar" class="user-avatar">
           <i class="el-icon-caret-bottom" />
         </div>
         <el-dropdown-menu slot="dropdown">
@@ -37,7 +37,7 @@
             <el-dropdown-item>Docs</el-dropdown-item>
           </a> -->
           <el-dropdown-item divided>
-            <span style="display:block;" @click="logout">Log Out</span>
+            <span style="display:block;" @click="logout">退出</span>
           </el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
@@ -61,7 +61,7 @@ export default {
   },
   data() {
     return {
-      avatarUrl: ''
+      username: ''
     }
   },
   computed: {
@@ -72,32 +72,38 @@ export default {
     ])
   },
   created() {
-    this.$axios.post(process.env.VUE_APP_BASE_API2 + '/api/man/v1/login/state', {}).then(response => {
-      this.avatarUrl = response.data.avatar
-      this.listLoading = false
-    }).catch(error => {
-      console.log(error)
-      alert('网络错误，不能访问')
-    })
+    this.$store.dispatch('user/getInfo')
+      .then(() => {
+      })
+      .catch(error => {
+        console.log(error)
+      })
   },
   methods: {
     toggleSideBar() {
       this.$store.dispatch('app/toggleSideBar')
     },
-    logout() {
-      this.$axios.post(process.env.VUE_APP_BASE_API2 + '/api/man/v1/login/doLogout', {}).then(response => {
-        if (response.data.code === 200) {
-          this.$router.push({ path: '/login' })
-        } else {
-          alert('退出登录失败')
-        }
-      }).catch(error => {
-        console.log(error)
-        alert('网络错误，不能访问')
-      })
-      // this.$store.dispatch('user/logout')
-      // this.$router.push({ path: '/login' })
+
+    async logout() {
+      await this.$store.dispatch('user/logout')
+      this.$router.push(`/login?redirect=${this.$route.fullPath}`)
     }
+
+    // logout() {
+
+    //   this.$store.dispatch('user/logout')
+    //     .then(() => {
+    //       this.$router.push({ path: '/login' })
+    //       console.log(456)
+    //     })
+    //     .catch(() => {
+    //       this.loading = false
+    //       console.log(132)
+    //     })
+
+    // this.$store.dispatch('user/logout')
+    // this.$router.push({ path: '/login' })
+
   }
 }
 </script>

@@ -1,6 +1,7 @@
 <template>
   <div>
     <div>
+      <button @click="show">3213546</button>
       <div style="position:absolute; right:160px; top:15px">
         <router-link to="dakaliebiao">
           <el-button class="pan-btn yellow-btn">返回列表</el-button>
@@ -95,9 +96,9 @@
       >
         <el-option
           v-for="item in industryNameList"
-          :key="item.labelName"
-          :label="item.labelName"
-          :value="item.labelName"
+          :key="item.categoryName"
+          :label="item.categoryName"
+          :value="item.categoryName"
         />
       </el-select>
       <el-input v-model="newIndustryName" size="small" style="display:inline-block;width:200px;margin-left:50px" />
@@ -173,7 +174,8 @@ export default {
     }
   },
   created() {
-    this.$axios.post(process.env.VUE_APP_BASE_API2 + '/api/man/v1/lable/queryList', {}).then(response => {
+    this.$axios.post(process.env.VUE_APP_BASE_API + '/api/man/v1/lable/queryList', { categoryType: 5 }).then(response => {
+      console.log(response.data.data)
       this.industryNameList = response.data.data
     }).catch(error => {
       console.log(error)
@@ -181,6 +183,9 @@ export default {
     })
   },
   methods: {
+    show() {
+      console.log(this.listQuery.industryName)
+    },
     selectThree() {
       if (this.listQuery.industryName.length > 3) {
         this.$message.error('最多选择三个选项')
@@ -207,7 +212,7 @@ export default {
       var cos = new COS({
         getAuthorization: function(options, callback) {
           // 异步获取临时密钥
-          that.$axios.get(process.env.VUE_APP_BASE_API2 + '/api/v1/cos-upload/getTmpSign', {
+          that.$axios.get(process.env.VUE_APP_BASE_API + '/api/v1/cos-upload/getTmpSign', {
             bucket: options.Bucket,
             region: options.Region
           }).then(data => {
@@ -252,7 +257,7 @@ export default {
       var cos = new COS({
         getAuthorization: function(options, callback) {
           // 异步获取临时密钥
-          that.$axios.get(process.env.VUE_APP_BASE_API2 + '/api/v1/cos-upload/getTmpSign', {
+          that.$axios.get(process.env.VUE_APP_BASE_API + '/api/v1/cos-upload/getTmpSign', {
             bucket: options.Bucket,
             region: options.Region
           }).then(data => {
@@ -287,7 +292,7 @@ export default {
           return false
         }
       }
-      this.$axios.post(process.env.VUE_APP_BASE_API2 + '/api/man/v1/expert/addExpert', this.listQuery).then(response => {
+      this.$axios.post(process.env.VUE_APP_BASE_API + '/api/man/v1/expert/addExpert', this.listQuery).then(response => {
         if (response.data.code === 200) {
           alert('上传成功')
         } else {
@@ -303,7 +308,7 @@ export default {
         this.$message.error('此处不能为空')
         return false
       }
-      this.$axios.post(process.env.VUE_APP_BASE_API2 + '/api/man/v1/lable/addLable', { labelName: this.newIndustryName, labelType: '4', sortNum: '1' }).then(response => {
+      this.$axios.post(process.env.VUE_APP_BASE_API + '/api/man/v1/lable/addLable', { labelName: this.newIndustryName, labelType: '4', sortNum: '1' }).then(response => {
         if (response.data.code === 200) {
           alert('上传成功')
         } else {

@@ -145,29 +145,27 @@ export default {
       })
     },
     handleLogin() {
-      const that = this
-      this.$axios.post(process.env.VUE_APP_BASE_API2 + '/api/man/v1/login/doLogin', { userName: this.loginForm.username, passWord: this.loginForm.password }).then(response => {
-        if (response.data.code === 200) {
-          that.$router.push({ path: '/product/kechengguanli/kechengliebiao' })
-          // alert('登陆成功')
-        } else {
-          alert('登录失败')
-        }
-      }).catch(error => {
-        console.log(error)
-        alert('网络错误，不能访问')
-      })
+      // const that = this
+      // this.$axios.post(process.env.VUE_APP_BASE_API2 + '/api/man/v1/login/doLogin', { userName: this.loginForm.username, passWord: this.loginForm.password }).then(response => {
+      //   if (response.data.code === 200) {
+      //     that.$router.push({ path: '/product/kechengguanli/kechengliebiao' })
+      //     // alert('登陆成功')
+      //   } else {
+      //     alert('登录失败')
+      //   }
+      // }).catch(error => {
+      //   console.log(error)
+      //   alert('网络错误，不能访问')
+      // })
 
-      // this.$store.dispatch('user/login', this.loginForm)
-      //   .then(() => {
-      //     this.$router.push({ path: '/' })
-      //     this.loading = false
-      //     console.log(456)
-      //   })
-      //   .catch(() => {
-      //     this.loading = false
-      //     console.log(123)
-      //   })
+      this.$store.dispatch('user/login', this.loginForm)
+        .then(() => {
+          this.$router.push({ path: '/' })
+          this.loading = false
+        })
+        .catch(() => {
+          this.loading = false
+        })
 
       // this.$refs.loginForm.validate(valid => {
       //   if (valid) {

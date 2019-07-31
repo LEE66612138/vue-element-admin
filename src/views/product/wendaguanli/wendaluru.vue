@@ -108,7 +108,7 @@ export default {
       var cos = new COS({
         getAuthorization: function(options, callback) {
           // 异步获取临时密钥
-          that.$axios.get(process.env.VUE_APP_BASE_API2 + '/api/v1/cos-upload/getTmpSign', {
+          that.$axios.get(process.env.VUE_APP_BASE_API + '/api/v1/cos-upload/getTmpSign', {
             bucket: options.Bucket,
             region: options.Region
           }).then(data => {

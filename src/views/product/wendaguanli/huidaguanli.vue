@@ -119,7 +119,7 @@ export default {
     }
   },
   created() {
-    this.$axios.post(process.env.VUE_APP_BASE_API2 + '/api/man/v1/question/userAnswer', {}).then(response => {
+    this.$axios.post(process.env.VUE_APP_BASE_API + '/api/man/v1/question/userAnswer', {}).then(response => {
       this.list = response.data.data
       this.list.map((item, index) => {
         this.slist.push(
@@ -188,7 +188,7 @@ export default {
       this.answerUserName = ''
     },
     handleModifyStatus(row, status) {
-      this.$axios.post(process.env.VUE_APP_BASE_API2 + '/api/man/v1/question/putawayAnswer', { no: row.no }).then(response => {
+      this.$axios.post(process.env.VUE_APP_BASE_API + '/api/man/v1/question/putawayAnswer', { no: row.no }).then(response => {
         if (response.data.code === 200) {
           row.status = status
           this.$message({

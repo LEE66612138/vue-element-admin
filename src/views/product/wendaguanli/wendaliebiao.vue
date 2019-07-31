@@ -54,7 +54,7 @@ export default {
     }
   },
   created() {
-    this.$axios.post(process.env.VUE_APP_BASE_API2 + '/api/man/v1/question/getQuestionNum', {}).then(response => {
+    this.$axios.post(process.env.VUE_APP_BASE_API + '/api/man/v1/question/getQuestionNum', {}).then(response => {
       this.pendingQuestion = response.data.data.pendingQuestion
       this.todayQuestion = response.data.data.todayQuestion
       this.urgentQuestion = response.data.data.urgentQuestion
@@ -62,7 +62,7 @@ export default {
       console.log(error)
       alert('网络错误，不能访问')
     })
-    this.$axios.post(process.env.VUE_APP_BASE_API2 + '/api/man/v1/question/getUserQuestion', {}).then(response => {
+    this.$axios.post(process.env.VUE_APP_BASE_API + '/api/man/v1/question/getUserQuestion', {}).then(response => {
       this.slist = this.list = response.data.data
     }).catch(error => {
       console.log(error)

@@ -141,7 +141,7 @@ export default {
     }
   },
   created() {
-    this.$axios.post(process.env.VUE_APP_BASE_API2 + '/api/man/v1/expert/expertPage', this.listQuery).then(response => {
+    this.$axios.post(process.env.VUE_APP_BASE_API + '/api/man/v1/expert/expertPage', this.listQuery).then(response => {
       this.slist = this.list = response.data.data
       this.putawayUserNameList = this.select('putawayUserName')
       this.industryNameList = this.select('industryName')
@@ -182,7 +182,7 @@ export default {
       return Y + M + D + h + m + s
     },
     handleModifyStatus(row, status) {
-      this.$axios.post(process.env.VUE_APP_BASE_API2 + '/api/man/v1/expert/putawayExpert', { no: row.no }).then(response => {
+      this.$axios.post(process.env.VUE_APP_BASE_API + '/api/man/v1/expert/putawayExpert', { no: row.no }).then(response => {
         if (response.data.code === 200) {
           row.status = status
           this.$message({

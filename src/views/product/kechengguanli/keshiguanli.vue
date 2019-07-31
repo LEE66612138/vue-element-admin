@@ -81,7 +81,7 @@ export default {
     }
   },
   created() {
-    this.$axios.post(process.env.VUE_APP_BASE_API2 + '/api/man/v1/course/queryCourseUnitList', { no: this.$route.query.no }).then(response => {
+    this.$axios.post(process.env.VUE_APP_BASE_API + '/api/man/v1/course/queryCourseUnitList', { no: this.$route.query.no }).then(response => {
       this.slist = this.list = response.data.data
       this.no = this.$route.query.no
       this.listLength = this.list.length

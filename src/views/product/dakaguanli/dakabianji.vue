@@ -143,10 +143,9 @@ export default {
     }
   },
   created() {
-    this.$axios.post(process.env.VUE_APP_BASE_API2 + '/api/man/v1/lable/queryList', {}).then(response => {
+    this.$axios.post(process.env.VUE_APP_BASE_API + '/api/man/v1/lable/queryList', {}).then(response => {
       this.industryNameList = response.data.data
-      console.log(response.data.data)
-      console.log(this.$route.query.industryName)
+      console.log(response.data)
     }).catch(error => {
       console.log(error)
       alert('网络错误，不能访问')
@@ -179,7 +178,7 @@ export default {
       var cos = new COS({
         getAuthorization: function(options, callback) {
           // 异步获取临时密钥
-          that.$axios.get(process.env.VUE_APP_BASE_API2 + '/api/v1/cos-upload/getTmpSign', {
+          that.$axios.get(process.env.VUE_APP_BASE_API + '/api/v1/cos-upload/getTmpSign', {
             bucket: options.Bucket,
             region: options.Region
           }).then(data => {
@@ -224,7 +223,7 @@ export default {
       var cos = new COS({
         getAuthorization: function(options, callback) {
           // 异步获取临时密钥
-          that.$axios.get(process.env.VUE_APP_BASE_API2 + '/api/v1/cos-upload/getTmpSign', {
+          that.$axios.get(process.env.VUE_APP_BASE_API + '/api/v1/cos-upload/getTmpSign', {
             bucket: options.Bucket,
             region: options.Region
           }).then(data => {
@@ -260,7 +259,7 @@ export default {
           return false
         }
       }
-      this.$axios.post(process.env.VUE_APP_BASE_API2 + '/api/man/v1/expert/editExpert', this.listQuery).then(response => {
+      this.$axios.post(process.env.VUE_APP_BASE_API + '/api/man/v1/expert/editExpert', this.listQuery).then(response => {
         if (response.data.code === 200) {
           alert('上传成功')
         } else {
@@ -276,7 +275,7 @@ export default {
         this.$message.error('此处不能为空')
         return false
       }
-      this.$axios.post(process.env.VUE_APP_BASE_API2 + '/api/man/v1/lable/addLable', { labelName: this.newIndustryName, labelType: '4', sortNum: '1' }).then(response => {
+      this.$axios.post(process.env.VUE_APP_BASE_API + '/api/man/v1/lable/addLable', { labelName: this.newIndustryName, labelType: '4', sortNum: '1' }).then(response => {
         if (response.data.code === 200) {
           alert('上传成功')
         } else {

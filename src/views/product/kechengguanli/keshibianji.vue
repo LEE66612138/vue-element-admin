@@ -119,7 +119,7 @@ export default {
           return false
         }
       }
-      this.$axios.post(process.env.VUE_APP_BASE_API2 + '/api/man/v1/course/createUnit', this.listQuery).then(response => {
+      this.$axios.post(process.env.VUE_APP_BASE_API + '/api/man/v1/course/createUnit', this.listQuery).then(response => {
         if (response.data.code === 200) {
           alert('上传成功')
         } else {
@@ -145,7 +145,7 @@ export default {
       var cos = new COS({
         getAuthorization: function(options, callback) {
           // 异步获取临时密钥
-          that.$axios.get(process.env.VUE_APP_BASE_API2 + '/api/v1/cos-upload/getTmpSign', {
+          that.$axios.get(process.env.VUE_APP_BASE_API + '/api/v1/cos-upload/getTmpSign', {
             bucket: options.Bucket,
             region: options.Region
           }).then(data => {
