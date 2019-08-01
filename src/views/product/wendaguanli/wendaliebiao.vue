@@ -39,10 +39,14 @@
         <span>{{ item.userSize }}</span>
       </li>
     </ul>
-  </div></template>
+    <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.pageSize" @pagination="getList()" />
+  </div>
+</template>
 
 <script>
+import Pagination from '@/components/Pagination'
 export default {
+  components: { Pagination },
   data() {
     return {
       pendingQuestion: '',
@@ -50,24 +54,38 @@ export default {
       urgentQuestion: '',
       list: '',
       slist: '',
-      isShow: ''
+      isShow: '',
+      total: 0,
+      listQuery: {
+        page: 1,
+        pageSize: 10
+      }
     }
   },
   created() {
-    this.$axios.post(process.env.VUE_APP_BASE_API + '/api/man/v1/question/getQuestionNum', {}).then(response => {
-      this.pendingQuestion = response.data.data.pendingQuestion
-      this.todayQuestion = response.data.data.todayQuestion
-      this.urgentQuestion = response.data.data.urgentQuestion
-    }).catch(error => {
-      console.log(error)
-      alert('网络错误，不能访问')
-    })
-    this.$axios.post(process.env.VUE_APP_BASE_API + '/api/man/v1/question/getUserQuestion', {}).then(response => {
-      this.slist = this.list = response.data.data
-    }).catch(error => {
-      console.log(error)
-      alert('网络错误，不能访问')
-    })
+    this.getData()
+    this.getList()
+  },
+  methods: {
+    getData() {
+      this.$axios.post(process.env.VUE_APP_BASE_API + '/api/man/v1/question/getQuestionNum', {}).then(response => {
+        this.pendingQuestion = response.data.data.pendingQuestion
+        this.todayQuestion = response.data.data.todayQuestion
+        this.urgentQuestion = response.data.data.urgentQuestion
+      }).catch(error => {
+        console.log(error)
+        alert('网络错误，不能访问')
+      })
+    },
+    getList() {
+      this.$axios.post(process.env.VUE_APP_BASE_API + '/api/man/v1/question/getUserQuestion', {}).then(response => {
+        this.slist = this.list = response.data.data
+        this.total = response.data.pagination.total
+      }).catch(error => {
+        console.log(error)
+        alert('网络错误，不能访问')
+      })
+    }
   }
 }
 

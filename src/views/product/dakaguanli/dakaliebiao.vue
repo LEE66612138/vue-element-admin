@@ -23,29 +23,29 @@
     <div class="dakaliebiao">
       <el-table
         :data="slist"
+        border
       >
-        <el-table-column type="selection" width="45px" />
         <el-table-column label="ID" prop="id" align="center" width="50px" :show-overflow-tooltip="true">
           <template slot-scope="scope">
             <span>{{ scope.row.no }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="昵称" align="center" min-width="100px">
+        <el-table-column label="昵称" align="center" width="100px">
           <template slot-scope="scope">
             <span>{{ scope.row.nickName }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="头像" align="center" min-width="150px">
+        <el-table-column label="头像" align="center" width="150px">
           <template slot-scope="scope">
             <img :src="scope.row.headImgUrl" alt="" style="width:50px;height:50px">
           </template>
         </el-table-column>
-        <el-table-column label="职位" align="center" min-width="80px" :show-overflow-tooltip="true">
+        <el-table-column label="职位" align="center" width="80px" :show-overflow-tooltip="true">
           <template slot-scope="scope">
             <span>{{ scope.row.occupationName }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="擅长领域" align="center" min-width="100px" :show-overflow-tooltip="true">
+        <el-table-column label="擅长领域" align="center" width="100px" :show-overflow-tooltip="true">
           <template slot-scope="scope">
             <span>{{ scope.row.industryName }}</span>
           </template>
@@ -105,15 +105,20 @@
             <el-button v-if="scope.row.status!='0'" align="center" @click="handleModifyStatus(scope.row,'0')">
               下架
             </el-button>
+            <el-button type="danger" align="center" @click="handleDelete(scope.row)">
+              删除
+            </el-button>
           </template>
         </el-table-column>
       </el-table>
-
+      <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.pageSize" @pagination="getList()" />
     </div>
   </div></template>
 
 <script>
+import Pagination from '@/components/Pagination'
 export default {
+  components: { Pagination },
   filters: {
     statusFilter(status) {
       if (status < 1) {
@@ -134,24 +139,29 @@ export default {
       putawayUserName: '',
       industryNameList: '',
       industryName: '',
+      total: 0,
       listQuery: {
         page: 1,
-        pageSize: 40
+        pageSize: 10
       }
     }
   },
   created() {
-    this.$axios.post(process.env.VUE_APP_BASE_API + '/api/man/v1/expert/expertPage', this.listQuery).then(response => {
-      this.slist = this.list = response.data.data
-      this.putawayUserNameList = this.select('putawayUserName')
-      this.industryNameList = this.select('industryName')
-      this.listLoading = false
-    }).catch(error => {
-      console.log(error)
-      alert('网络错误，不能访问')
-    })
+    this.getList()
   },
   methods: {
+    getList() {
+      this.$axios.post(process.env.VUE_APP_BASE_API + '/api/man/v1/expert/expertPage', this.listQuery).then(response => {
+        this.slist = this.list = response.data.data
+        this.total = response.data.pagination.total
+        this.putawayUserNameList = this.select('putawayUserName')
+        this.industryNameList = this.select('industryName')
+        this.listLoading = false
+      }).catch(error => {
+        console.log(error)
+        alert('网络错误，不能访问')
+      })
+    },
     select(p) {
       const newArr = []
       for (var i = 0; i < this.slist.length; i++) {
@@ -197,6 +207,22 @@ export default {
         alert('网络错误，不能访问')
       })
     },
+    handleDelete(row) {
+      this.$axios.post(process.env.VUE_APP_BASE_API + '/api/man/v1/expert/delExpert', { no: row.no }).then(response => {
+        if (response.data.code === 200) {
+          row.status = status
+          this.$message({
+            message: '操作Success',
+            type: 'success'
+          })
+        } else {
+          this.$message.error('操作失败')
+        }
+      }).catch(error => {
+        console.log(error)
+        alert('网络错误，不能访问')
+      })
+    },
     resetAll() {
       this.slist = this.list
       this.putawayUserNameList = this.select('putawayUserName')
@@ -207,10 +233,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  span{
-    font-size: 17px;
-  }
-  form{
-    font-size: 17px;
-  }
+
 </style>

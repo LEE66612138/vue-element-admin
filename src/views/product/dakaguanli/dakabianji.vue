@@ -145,7 +145,6 @@ export default {
   created() {
     this.$axios.post(process.env.VUE_APP_BASE_API + '/api/man/v1/lable/queryList', {}).then(response => {
       this.industryNameList = response.data.data
-      console.log(response.data)
     }).catch(error => {
       console.log(error)
       alert('网络错误，不能访问')

@@ -1,5 +1,7 @@
 <template>
-  <div>这是管理中心界面</div>
+  <div>
+    <h1>这是管理中心界面</h1>
+  </div>
 </template>
 
 <script>

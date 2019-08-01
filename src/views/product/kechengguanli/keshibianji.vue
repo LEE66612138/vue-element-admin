@@ -1,6 +1,5 @@
 <template>
   <div>
-    <button @click="show" />
     <div style="position:absolute; right:160px; top:15px">
       <router-link to="kechengliebiao">
         <el-button class="pan-btn yellow-btn">返回列表</el-button>
@@ -105,12 +104,6 @@ export default {
     }
   },
   methods: {
-    show() {
-      console.log(this.$route.query)
-      console.log(this.isSample)
-      console.log(this.courseNo)
-      console.log(typeof (this.isSample))
-    },
     publish() {
       const obj = this.listQuery
       for (const p in obj) {

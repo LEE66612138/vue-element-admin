@@ -2,23 +2,23 @@
   <div>
     <h1 style="color:black">课程管理</h1>
     <br>
-    <div ref="selectContainer" style="margin-left:50px">
+    <div style="margin-left:50px">
       <div style="display:inline-block; margin-right:150px">
         <span>上架人员</span>
-        <el-select v-model="putawayUserName" style="display:inline-block" @change="selectOne('putawayUserName','putawayUserNameList')">
-          <el-option v-for="item in putawayUserNameList" :key="item" :label="item" :value="item" />
+        <el-select v-model="listQuery.putawayUserNo" style="display:inline-block" @change="handleFilter()">
+          <el-option v-for="item in select('putawayUserName')" :key="item.putawayUserNo" :label="item.putawayUserName" :value="item.putawayUserNo" />
         </el-select>
       </div>
       <div style="display:inline-block; margin-right:150px">
-        <span>所属大咖</span>
-        <el-select v-model="broadcaster" style="display:inline-block" @change="selectOne('broadcaster','broadcasterList')">
-          <el-option v-for="item in broadcasterList" :key="item" :label="item" :value="item" />
+        <span>所属大咖 :</span>
+        <el-select v-model="listQuery.expertNo" style="display:inline-block" @change="handleFilter()">
+          <el-option v-for="item in broadcasterList" :key="item.no" :label="item.nickName" :value="item.no" />
         </el-select>
       </div>
       <div style="display:inline-block; margin-right:150px">
-        <span>课程版块</span>
-        <el-select v-model="categoryName" style="display:inline-block" @change="selectOne('categoryName','categoryNameList')">
-          <el-option v-for="item in categoryNameList" :key="item" :label="item" :value="item" />
+        <span>课程版块 :</span>
+        <el-select v-model="listQuery.courseTitle" style="display:inline-block" @change="handleFilter()">
+          <el-option v-for="item in categoryNameList" :key="item.categoryName" :label="item.categoryName" :value="item.categoryName" />
         </el-select>
       </div>
       <div style="float:right; margin-right:10px">
@@ -35,10 +35,14 @@
     <br>
     <br>
     <div>
-      <div class="kechengliebiao">
+      <div>
         <el-table
           v-loading="listLoading"
-          :data="slist"
+          border
+          fit
+          highlight-current-row
+          :data="list"
+          style="width: 100%;"
         >
           <el-table-column type="selection" width="45px" />
           <el-table-column label="ID" prop="id" align="center" width="50px" :show-overflow-tooltip="true">
@@ -46,37 +50,37 @@
               <span>{{ scope.row.no }}</span>
             </template>
           </el-table-column>
-          <el-table-column label="课程名称" align="center" min-width="150px">
+          <el-table-column label="课程名称" align="center" width="150px">
             <template slot-scope="scope">
               <span>{{ scope.row.courseTitle }}</span>
             </template>
           </el-table-column>
-          <el-table-column label="封面" align="center" min-width="150px">
+          <el-table-column label="封面" align="center" width="170px">
             <template slot-scope="scope">
               <img :src="scope.row.mainImgUrl" alt="" style="width:150px;height:90px">
             </template>
           </el-table-column>
-          <el-table-column label="课程类型" align="center" min-width="80px">
+          <el-table-column label="课程类型" align="center" width="80px">
             <template slot-scope="scope">
               <span>{{ scope.row.courseType == '1'?'音频':'视频' }}</span>
             </template>
           </el-table-column>
-          <el-table-column label="总课时" align="center" min-width="100px">
+          <el-table-column label="总课时" align="center" width="80px">
             <template slot-scope="scope">
               <span>{{ scope.row.classUpdateNum + '/' + scope.row.classTotalNum }}</span>
             </template>
           </el-table-column>
-          <el-table-column label="所属大咖" width="110px" align="center">
+          <el-table-column label="所属大咖" width="80px" align="center">
             <template slot-scope="scope">
               <span>{{ scope.row.broadcaster }}</span>
             </template>
           </el-table-column>
-          <el-table-column label="课程板块" align="center" min-width="150px">
+          <el-table-column label="课程板块" align="center" width="150px">
             <template slot-scope="scope">
               <span>{{ scope.row.categoryName }}</span>
             </template>
           </el-table-column>
-          <el-table-column label="发布类型" align="center" min-width="150px">
+          <el-table-column label="发布类型" align="center" width="100px">
             <template slot-scope="scope">
               <el-tag :type="scope.row.classUpdateNum/scope.row.classTotalNum | statusFilter">
                 {{ scope.row.classUpdateNum/scope.row.classTotalNum == '1'?'已完结':'连载中' }}
@@ -121,6 +125,7 @@
             </template>
           </el-table-column>
         </el-table>
+        <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.pageSize" @pagination="getList" />
       </div>
     </div>
   </div>
@@ -128,8 +133,10 @@
 
 <script>
 // import { fetchList } from '@/api/kechengliebiao'
+import Pagination from '@/components/Pagination'
 
 export default {
+  components: { Pagination },
   filters: {
     statusFilter(status) {
       if (status < 1) {
@@ -144,71 +151,90 @@ export default {
   },
   data() {
     return {
-      putawayUserName: '',
-      broadcaster: '',
-      categoryName: '',
       list: null,
-      slist: null,
       putawayUserNameList: null,
       broadcasterList: null,
       categoryNameList: null,
       listLoading: true,
+      total: 0,
       listQuery: {
         page: 1,
-        pageSize: 10
+        pageSize: 20,
+        putawayUserNo: '',
+        expertNo: '',
+        courseTitle: ''
       }
     }
   },
 
   created() {
-    // this.getList()
-
-    this.$axios.post(process.env.VUE_APP_BASE_API + '/api/man/v1/course/coursePage', this.listQuery).then(response => {
-      this.slist = this.list = response.data.data
-      this.putawayUserNameList = this.select('putawayUserName')
-      this.broadcasterList = this.select('broadcaster')
-      this.categoryNameList = this.select('categoryName')
-      this.listLoading = false
-    }).catch(error => {
-      console.log(error)
-      alert('网络错误，不能访问')
-    })
+    this.getList()
+    this.getPutawayUserNameList()
+    this.getBroadcasterList()
+    this.getCategoryNameList()
   },
 
   methods: {
-    // getList() {
-    //   fetchList(this.listQuery).then(response => {
-    //     this.slist = this.list = response.data.data
-    //     this.putawayUserNameList = this.select('putawayUserName')
-    //     this.broadcasterList = this.select('broadcaster')
-    //     this.categoryNameList = this.select('categoryName')
-    //     this.listLoading = false
-    //   }).catch(error => {
-    //     console.log(error)
-    //     alert('网络错误，不能访问')
-    //   })
-    // },
-    select(p) {
+    getList() {
+      this.$axios.post(process.env.VUE_APP_BASE_API + '/api/man/v1/course/coursePage', this.listQuery).then(response => {
+        this.list = response.data.data
+        this.total = response.data.pagination.total
+        this.listLoading = false
+      }).catch(error => {
+        console.log(error)
+        alert('网络错误，不能访问')
+      })
+    },
+    getPutawayUserNameList() {
+      this.$axios.post(process.env.VUE_APP_BASE_API + '/api/man/v1/course/coursePage', {}).then(response => {
+        this.putawayUserNameList = response.data.data
+      }).catch(error => {
+        console.log(error)
+        alert('网络错误，不能访问')
+      })
+    },
+    getBroadcasterList() {
+      this.$axios.post(process.env.VUE_APP_BASE_API + '/api/man/v1/expert/expertPage', {}).then(response => {
+        this.broadcasterList = response.data.data
+      }).catch(error => {
+        console.log(error)
+        alert('网络错误，不能访问')
+      })
+    },
+    getCategoryNameList() {
+      this.$axios.post(process.env.VUE_APP_BASE_API + '/api/man/v1/lable/queryList', { categoryType: 1 }).then(response => {
+        this.categoryNameList = response.data.data
+      }).catch(error => {
+        console.log(error)
+        alert('网络错误，不能访问')
+      })
+    },
+    handleFilter() {
+      this.listQuery.page = 1
+      this.getList()
+    },
+    select(p, l) {
+      // console.log(this.list)
       const newArr = []
-      for (var i = 0; i < this.slist.length; i++) {
-        if (newArr.indexOf(this.slist[i][p]) === -1) {
-          newArr.push(this.slist[i][p])
+      for (var i = 0; i < this[l].length; i++) {
+        if (newArr.indexOf(this[l][i][p]) === -1) {
+          newArr.push(this[l][i])
         }
       }
       return newArr
     },
-    selectOne(p, l) {
-      const newArr = []
-      for (var i = 0; i < this.slist.length; i++) {
-        if (this.slist[i][p] === this[p]) {
-          newArr.push(this.slist[i])
-        }
-      }
-      this.slist = newArr
-      this.putawayUserNameList = this.select('putawayUserName')
-      this.broadcasterList = this.select('broadcaster')
-      this.categoryNameList = this.select('categoryName')
-    },
+    // selectOne(p, l) {
+    //   const newArr = []
+    //   for (let i = 0; i < this.slist.length; i++) {
+    //     if (this.slist[i][p] === this[p]) {
+    //       newArr.push(this.slist[i])
+    //     }
+    //   }
+    //   this.slist = newArr
+    //   this.putawayUserNameList = this.select('putawayUserName')
+    //   this.broadcasterList = this.select('broadcaster')
+    //   this.categoryNameList = this.select('categoryName')
+    // },
     timestampToTime(row, column) {
       var date = new Date(row.putawayTime)
       var Y = date.getFullYear() + '-'
@@ -240,38 +266,16 @@ export default {
       })
     },
     resetAll() {
-      this.slist = this.list
-      this.putawayUserNameList = this.select('putawayUserName')
-      this.broadcasterList = this.select('broadcaster')
-      this.categoryNameList = this.select('categoryName')
-      this.putawayUserName = ''
-      this.broadcaster = ''
-      this.categoryName = ''
+      this.listQuery.page = 1
+      this.listQuery.putawayUserNo = ''
+      this.listQuery.expertNo = ''
+      this.listQuery.courseTitle = ''
+      this.getList()
     }
-    // show() {
-    //   console.log(this.broadcasterList)
-    // }
-  // created() {
-  //   this.getList()
-  // },
-  // methods: {
-  //   getList() {
-  //     fetchList(this.listQuery).then(response => {
-  //       console.log(response.data + '1')
-  //     }).catch(response => {
-  //       console.log(response.data + '2')
-  //     })
-  //   }
-  // }
   }
 }
 </script>
 
 <style lang="scss" scoped>
-  span{
-    font-size: 17px;
-  }
-  form{
-    font-size: 17px;
-  }
+
 </style>

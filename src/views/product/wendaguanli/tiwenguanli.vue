@@ -24,7 +24,6 @@
       <el-table
         :data="slist"
       >
-        <el-table-column type="selection" width="45px" />
         <el-table-column label="ID" prop="id" align="center" width="50px" :show-overflow-tooltip="true">
           <template slot-scope="scope">
             <span>{{ scope.row.no }}</span>
@@ -91,12 +90,15 @@
           </template>
         </el-table-column>
       </el-table>
+      <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.pageSize" @pagination="getList()" />
 
     </div>
   </div></template>
 
 <script>
+import Pagination from '@/components/Pagination'
 export default {
+  components: { Pagination },
   data() {
     return {
       list: null,
@@ -104,20 +106,29 @@ export default {
       answerUserName: '',
       answerUserNameList: '',
       isInvalidList: '',
-      isInvalid: ''
+      isInvalid: '',
+      total: 0,
+      listQuery: {
+        page: 1,
+        pageSize: 10
+      }
     }
   },
   created() {
-    this.$axios.post(process.env.VUE_APP_BASE_API + '/api/man/v1/question/userQuestion', {}).then(response => {
-      this.slist = this.list = response.data.data
-      this.answerUserNameList = this.select('answerUserName')
-      this.isInvalidList = this.select('isInvalid')
-    }).catch(error => {
-      console.log(error)
-      alert('网络错误，不能访问')
-    })
+    this.getList()
   },
   methods: {
+    getList() {
+      this.$axios.post(process.env.VUE_APP_BASE_API + '/api/man/v1/question/userQuestion', {}).then(response => {
+        this.slist = this.list = response.data.data
+        this.total = response.data.pagination.total
+        this.answerUserNameList = this.select('answerUserName')
+        this.isInvalidList = this.select('isInvalid')
+      }).catch(error => {
+        console.log(error)
+        alert('网络错误，不能访问')
+      })
+    },
     select(p) {
       const newArr = []
       for (var i = 0; i < this.slist.length; i++) {

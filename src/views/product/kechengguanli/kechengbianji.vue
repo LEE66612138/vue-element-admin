@@ -1,14 +1,12 @@
 <template>
   <div>
-    <div style="position:absolute; right:160px; top:15px">
+    <div style="position:absolute; right:150px; top:15px">
       <router-link to="kechengliebiao">
-        <el-button class="pan-btn yellow-btn">返回列表</el-button>
+        <el-button type="primary">返回列表</el-button>
       </router-link>
     </div>
     <div style="position:absolute; right:10px; top:15px">
-      <router-link to="">
-        <button class="pan-btn light-blue-btn" @click="publish()">课程发布</button>
-      </router-link>
+      <el-button type="primary" @click="publish()">课程发布</el-button>
     </div>
     <form action="">
       <div>
@@ -26,8 +24,8 @@
       <div>
         <span style="color:red">*</span>
         <span>所属大咖 :</span>
-        <el-select v-model="listQuery.broadcaster" style="display:inline-block">
-          <el-option v-for="item in broadcasterList" :key="item" :label="item" :value="item" />
+        <el-select v-model="listQuery.broadcaster" style="display:inline-block" @change="selectBroadcaster">
+          <el-option v-for="item in broadcasterList" :key="item.no" :label="item.nickName" :value="item.no" />
         </el-select>
       </div>
       <br>
@@ -56,8 +54,8 @@
       <div>
         <span style="color:red">*</span>
         <span>课程版块 :</span>
-        <el-select v-model="listQuery.categoryName" style="display:inline-block">
-          <el-option v-for="item in categoryNameList" :key="item" :label="item" :value="item" />
+        <el-select v-model="listQuery.categoryName" style="display:inline-block" @change="selectCategoryName">
+          <el-option v-for="item in categoryNameList" :key="item.no" :label="item.categoryName" :value="item.no" />
         </el-select>
         <el-input v-model="newCategoryName" size="small" style="display:inline-block;width:200px;margin-left:50px" />
         <el-button size="mini" @click="addNewTag">添加标签</el-button>
@@ -135,14 +133,16 @@ export default {
     return {
       mainImgUrl: '',
       headImgUrl: '',
-      broadcasterList: this.$route.query.broadcasterList,
-      categoryNameList: this.$route.query.categoryNameList,
+      broadcasterList: '',
+      categoryNameList: '',
       newCategoryName: '',
       PriceIsShow: false,
       addTagIsShow: false,
       publishTypeIsShow: false,
       listQuery: {
         no: this.$route.query.no,
+        categoryNo: this.$route.query.categoryNo,
+        expertNo: this.$route.query.expertNo,
         courseTitle: this.$route.query.courseTitle,
         broadcaster: this.$route.query.broadcaster,
         courseAbstract: this.$route.query.courseAbstract,
@@ -158,7 +158,43 @@ export default {
       }
     }
   },
+  created() {
+    this.getBroadcasterList()
+    this.getCategoryNameList()
+  },
   methods: {
+    selectCategoryName(vId) {
+      let obj = {}
+      obj = this.categoryNameList.find((item) => {
+        return item.no === vId
+      })
+      this.listQuery.categoryName = obj.categoryName
+      this.listQuery.categoryNo = obj.no
+    },
+    selectBroadcaster(vId) {
+      let obj = {}
+      obj = this.broadcasterList.find((item) => {
+        return item.no === vId
+      })
+      this.listQuery.broadcaster = obj.nickName
+      this.listQuery.expertNo = obj.no
+    },
+    getBroadcasterList() {
+      this.$axios.post(process.env.VUE_APP_BASE_API + '/api/man/v1/expert/expertPage', { categoryType: 1 }).then(response => {
+        this.broadcasterList = response.data.data
+      }).catch(error => {
+        console.log(error)
+        alert('网络错误，不能访问')
+      })
+    },
+    getCategoryNameList() {
+      this.$axios.post(process.env.VUE_APP_BASE_API + '/api/man/v1/lable/queryList', { categoryType: 1 }).then(response => {
+        this.categoryNameList = response.data.data
+      }).catch(error => {
+        console.log(error)
+        alert('网络错误，不能访问')
+      })
+    },
     addPrice() {
       this.PriceIsShow = false
       if (this.listQuery.currencyType !== '0') {
