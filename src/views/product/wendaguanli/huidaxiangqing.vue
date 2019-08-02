@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div style="position:absolute; right:60px; top:15px">
+    <div style="float:right;margin-left:10px ">
       <router-link to="huidaguanli">
         <el-button class="pan-btn yellow-btn">返回列表</el-button>
       </router-link>

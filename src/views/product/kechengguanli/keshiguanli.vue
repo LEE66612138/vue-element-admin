@@ -1,12 +1,12 @@
 <template>
   <div>
-    <div style="position:absolute; right:160px; top:15px">
+    <div style="float:right;margin-left:10px ">
       <router-link to="kechengliebiao">
         <el-button class="pan-btn yellow-btn">返回列表</el-button>
       </router-link>
     </div>
-    <div style="position:absolute; right:10px; top:15px">
-      <router-link :to="({path:'xinzengkeshi',query:{listLength:listLength,no:no}})">
+    <div style="float:right;margin-left:10px ">
+      <router-link :to="({path:'xinzengkeshi',query:{total:total,no:no}})">
         <button class="pan-btn light-blue-btn">新增课时</button>
       </router-link>
     </div>
@@ -30,7 +30,8 @@
     </div>
     <div>
       <el-table
-        :data="slist"
+        :data="list"
+        border
       >
         <el-table-column label="序号" prop="id" align="center" width="80">
           <template slot-scope="scope">
@@ -57,10 +58,14 @@
             <span>{{ scope.row.isSample == 0?'需付费':'可试听' }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="操作" align="center" width="100" color="blue">
+        <el-table-column label="操作" align="center" width="200" color="blue">
           <template slot-scope="scope">
-            <router-link :to="{path: 'keshibianji', query:scope.row}">编辑</router-link>
+            <router-link :to="{path: 'keshibianji', query:scope.row}">
+              <el-button type="primary">编辑</el-button>
+            </router-link>
+            <el-button type="danger" @click="handleDelete(scope.row.no)">删除</el-button>
           </template>
+
         </el-table-column>
 
       </el-table>
@@ -79,7 +84,7 @@ export default {
       slist: null,
       no: '',
       total: 0,
-      listLength: '',
+      courseTitle: '',
       listQuery: {
         page: 1,
         pageSize: 10
@@ -93,10 +98,9 @@ export default {
   methods: {
     getList() {
       this.$axios.post(process.env.VUE_APP_BASE_API + '/api/man/v1/course/queryCourseUnitList', { no: this.$route.query.no }).then(response => {
-        this.slist = this.list = response.data.data
+        this.list = response.data.data
         this.total = response.data.pagination.total
         this.no = this.$route.query.no
-        this.listLength = this.list.length
       }).catch(error => {
         console.log(error)
         alert('网络错误，不能访问')
@@ -120,6 +124,19 @@ export default {
         }
       }
       return time
+    },
+    handleDelete(no) {
+      this.$axios.post(process.env.VUE_APP_BASE_API + '/api/man/v1/course/delUnit', { no: no }).then(response => {
+        if (response.data.code === 200) {
+          this.$message.success('删除成功')
+          this.getList()
+        } else {
+          this.$message.success('删除失败')
+        }
+      }).catch(error => {
+        console.log(error)
+        alert('网络错误，不能访问')
+      })
     }
   }
 }

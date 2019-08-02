@@ -2,10 +2,10 @@
   <div>
     <h1 style="color:black">回答管理</h1>
     <br>
-    <div style="display:inline-block; margin-right:150px;font-size:17px">
-      <span>大咖:</span>
-      <el-select v-model="answerUserName" style="display:inline-block" @change="selectOne('answerUserName','answerUserNameList')">
-        <el-option v-for="item in answerUserNameList" :key="item" :label="item" :value="item" />
+    <div style="display:inline-block; margin-right:150px">
+      <span>大咖 :</span>
+      <el-select v-model="listQuery.answerUserNo" style="display:inline-block" @change="handleFilter()">
+        <el-option v-for="item in broadcasterList" :key="item.no" :label="item.nickName" :value="item.no" />
       </el-select>
     </div>
     <div style="float:right;margin-right:10px">
@@ -16,34 +16,35 @@
     <br>
     <div class="dakaliebiao">
       <el-table
-        :data="slist"
+        :data="list"
+        border
       >
         <el-table-column label="ID" prop="id" align="center" width="50px" :show-overflow-tooltip="true">
           <template slot-scope="scope">
             <span>{{ scope.row.no }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="用户昵称" align="center" min-width="100px">
+        <el-table-column label="用户昵称" align="center" width="80px">
           <template slot-scope="scope">
             <span>{{ scope.row.questionUserName }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="头像" align="center" min-width="150px">
+        <el-table-column label="头像" align="center" width="80px">
           <template slot-scope="scope">
             <img :src="scope.row.questionHeadImgUrl" alt="" style="width:50px;height:50px">
           </template>
         </el-table-column>
-        <el-table-column label="问题详情" align="center" min-width="250px" :show-overflow-tooltip="true">
+        <el-table-column label="问题详情" align="center" width="100px" :show-overflow-tooltip="true">
           <template slot-scope="scope">
             <span>{{ scope.row.question }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="回答大咖" align="center" min-width="80px">
+        <el-table-column label="回答大咖" align="center" width="80px">
           <template slot-scope="scope">
             <span>{{ scope.row.answerUserName }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="价格" align="center" min-width="100px">
+        <el-table-column label="价格" align="center" width="80px">
           <template slot-scope="scope">
             <span>{{ scope.row.price }}</span>
           </template>
@@ -70,7 +71,7 @@
             <span>{{ timestampToTime(scope.row.putawayTime) }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="上架人员" width="110px" align="center">
+        <el-table-column label="上架人员" width="80px" align="center">
           <template slot-scope="scope">
             <span style="color:red;">{{ scope.row.putawayUserName }}</span>
           </template>
@@ -117,53 +118,60 @@ export default {
       list: null,
       slist: [],
       total: 0,
-      answerUserName: '',
-      answerUserNameList: '',
+      broadcasterList: null,
       listQuery: {
         page: 1,
-        pageSize: 10
+        pageSize: 20,
+        answerUserNo: null
       }
     }
   },
   created() {
     this.getList()
+    this.getBroadcasterList()
   },
   methods: {
     getList() {
-      this.$axios.post(process.env.VUE_APP_BASE_API + '/api/man/v1/question/userAnswer', {}).then(response => {
+      this.$axios.post(process.env.VUE_APP_BASE_API + '/api/man/v1/question/userAnswer', this.listQuery).then(response => {
         this.list = response.data.data
         this.total = response.data.pagination.total
-        this.list.map((item, index) => {
-          this.slist.push(
-            Object.assign({}, item, { isShow: false })
-          )
-        })
-        this.answerUserNameList = this.select('answerUserName')
       }).catch(error => {
         console.log(error)
         alert('网络错误，不能访问')
       })
     },
-    select(p) {
-      const newArr = []
-      for (var i = 0; i < this.slist.length; i++) {
-        if (newArr.indexOf(this.slist[i][p]) === -1) {
-          newArr.push(this.slist[i][p])
-        }
-      }
-      return newArr
+    getBroadcasterList() {
+      this.$axios.post(process.env.VUE_APP_BASE_API + '/api/man/v1/expert/expertPage', {}).then(response => {
+        this.broadcasterList = response.data.data
+      }).catch(error => {
+        console.log(error)
+        alert('网络错误，不能访问')
+      })
     },
-    selectOne(p, l) {
-      const newArr = []
-      for (var i = 0; i < this.slist.length; i++) {
-        if (this.slist[i][p] === this[p]) {
-          newArr.push(this.slist[i])
-        }
-      }
-      this.slist = newArr
-      this.answerUserNameList = this.select('answerUserName')
-      this.isInvalidList = this.select('isInvalid')
+    handleFilter() {
+      this.listQuery.page = 1
+      this.getList()
     },
+    // select(p) {
+    //   const newArr = []
+    //   for (var i = 0; i < this.slist.length; i++) {
+    //     if (newArr.indexOf(this.slist[i][p]) === -1) {
+    //       newArr.push(this.slist[i][p])
+    //     }
+    //   }
+    //   return newArr
+    // },
+    // selectOne(p, l) {
+    //   const newArr = []
+    //   for (var i = 0; i < this.slist.length; i++) {
+    //     if (this.slist[i][p] === this[p]) {
+    //       newArr.push(this.slist[i])
+    //     }
+    //   }
+    //   this.slist = newArr
+    //   this.answerUserNameList = this.select('answerUserName')
+    //   this.isInvalidList = this.select('isInvalid')
+    // },
     timestampToTime(row, column) {
       var date = new Date(row)
       var Y = date.getFullYear() + '-'
@@ -194,9 +202,9 @@ export default {
       }
     },
     resetAll() {
-      this.slist = this.list
-      this.answerUserNameList = this.select('answerUserName')
-      this.answerUserName = ''
+      this.listQuery.page = 1
+      this.listQuery.answerUserNo = null
+      this.getList()
     },
     handleModifyStatus(row, status) {
       this.$axios.post(process.env.VUE_APP_BASE_API + '/api/man/v1/question/putawayAnswer', { no: row.no }).then(response => {

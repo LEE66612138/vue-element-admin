@@ -1,11 +1,11 @@
 <template>
   <div>
-    <div style="position:absolute; right:160px; top:15px">
+    <div style="float:right;margin-left:10px ">
       <router-link to="kechengliebiao">
         <el-button class="pan-btn yellow-btn">返回列表</el-button>
       </router-link>
     </div>
-    <div style="position:absolute; right:10px; top:15px">
+    <div style="float:right;margin-left:10px ">
       <button class="pan-btn light-blue-btn" @click="publish()">课时发布</button>
     </div>
     <div style="display：inline-block; float:left">
@@ -25,7 +25,6 @@
         v-model="listQuery.sortNum"
         style="display:inline-block;width:400px"
         size="medium"
-        maxlength="30"
       />
     </div>
     <div style="clear:both" />
@@ -71,8 +70,8 @@
     <div>
       <span style="color:red">*</span>
       <span>课时试听 :</span>
-      <el-radio v-model="listQuery.isSample" label="0">可试听</el-radio>
-      <el-radio v-model="listQuery.isSample" label="1">需付费</el-radio>
+      <el-radio v-model="listQuery.isSample" :label="0">可试听</el-radio>
+      <el-radio v-model="listQuery.isSample" :label="1">需付费</el-radio>
     </div>
     <br>
     <div>
@@ -112,7 +111,7 @@ export default {
           return false
         }
       }
-      this.$axios.post(process.env.VUE_APP_BASE_API + '/api/man/v1/course/createUnit', this.listQuery).then(response => {
+      this.$axios.post(process.env.VUE_APP_BASE_API + '/api/man/v1/course/editUnit', this.listQuery).then(response => {
         if (response.data.code === 200) {
           alert('上传成功')
         } else {
@@ -169,7 +168,4 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  *{
-    font-size: 17px;
-  }
 </style>

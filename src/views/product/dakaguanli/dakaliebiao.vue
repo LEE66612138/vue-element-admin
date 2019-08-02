@@ -12,8 +12,8 @@
     <br>
     <div style="display:inline-block; margin-right:150px">
       <span>上架人员</span>
-      <el-select v-model="putawayUserName" style="display:inline-block" @change="selectOne('putawayUserName','putawayUserNameList')">
-        <el-option v-for="item in putawayUserNameList" :key="item" :label="item" :value="item" />
+      <el-select v-model="listQuery.putawayUserNo" style="display:inline-block" @change="handleFilter()">
+        <el-option v-for="item in putawayUserNameList" :key="item.no" :label="item.nickName" :value="item.no" />
       </el-select>
     </div>
 
@@ -22,7 +22,7 @@
     <br>
     <div class="dakaliebiao">
       <el-table
-        :data="slist"
+        :data="list"
         border
       >
         <el-table-column label="ID" prop="id" align="center" width="50px" :show-overflow-tooltip="true">
@@ -35,7 +35,7 @@
             <span>{{ scope.row.nickName }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="头像" align="center" width="150px">
+        <el-table-column label="头像" align="center" width="100px">
           <template slot-scope="scope">
             <img :src="scope.row.headImgUrl" alt="" style="width:50px;height:50px">
           </template>
@@ -65,7 +65,7 @@
             <span>{{ scope.row.dataLimit }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="粉丝数" align="center" width="100">
+        <el-table-column label="粉丝数" align="center" width="70">
           <template slot-scope="scope">
             {{ scope.row.fansNum }}
           </template>
@@ -77,7 +77,7 @@
             </el-tag>
           </template>
         </el-table-column>
-        <el-table-column label="上架时间" width="150px" align="center">
+        <el-table-column label="上架时间" width="100px" align="center">
           <template slot-scope="scope">
             <span>{{ timestampToTime(scope.row) }}</span>
           </template>
@@ -133,53 +133,42 @@ export default {
   },
   data() {
     return {
-      slist: null,
       list: null,
       putawayUserNameList: '',
-      putawayUserName: '',
       industryNameList: '',
-      industryName: '',
       total: 0,
       listQuery: {
         page: 1,
-        pageSize: 10
+        pageSize: 10,
+        putawayUserNo: null
       }
     }
   },
   created() {
     this.getList()
+    this.getPutawayUserNameList()
   },
   methods: {
     getList() {
       this.$axios.post(process.env.VUE_APP_BASE_API + '/api/man/v1/expert/expertPage', this.listQuery).then(response => {
-        this.slist = this.list = response.data.data
+        this.list = response.data.data
         this.total = response.data.pagination.total
-        this.putawayUserNameList = this.select('putawayUserName')
-        this.industryNameList = this.select('industryName')
-        this.listLoading = false
       }).catch(error => {
         console.log(error)
         alert('网络错误，不能访问')
       })
     },
-    select(p) {
-      const newArr = []
-      for (var i = 0; i < this.slist.length; i++) {
-        if (newArr.indexOf(this.slist[i][p]) === -1) {
-          newArr.push(this.slist[i][p])
-        }
-      }
-      return newArr
+    getPutawayUserNameList() {
+      this.$axios.post(process.env.VUE_APP_BASE_API + '/api/man/v1/basic/manager/managerList', {}).then(response => {
+        this.putawayUserNameList = response.data.data
+      }).catch(error => {
+        console.log(error)
+        alert('网络错误，不能访问')
+      })
     },
-    selectOne(p, l) {
-      const newArr = []
-      for (var i = 0; i < this.slist.length; i++) {
-        if (this.slist[i][p] === this[p]) {
-          newArr.push(this.slist[i])
-        }
-      }
-      this.slist = newArr
-      this.putawayUserNameList = this.select('putawayUserName')
+    handleFilter() {
+      this.listQuery.page = 1
+      this.getList()
     },
     timestampToTime(row, column) {
       var date = new Date(row.putawayTime)
@@ -215,6 +204,7 @@ export default {
             message: '操作Success',
             type: 'success'
           })
+          this.getList()
         } else {
           this.$message.error('操作失败')
         }
@@ -224,9 +214,9 @@ export default {
       })
     },
     resetAll() {
-      this.slist = this.list
-      this.putawayUserNameList = this.select('putawayUserName')
-      this.putawayUserName = ''
+      this.listQuery.page = 1
+      this.listQuery.putawayUserNo = null
+      this.getList()
     }
   }
 }

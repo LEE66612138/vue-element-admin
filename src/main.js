@@ -19,7 +19,14 @@ import './icons' // icon
 import './permission' // permission control
 import './utils/error-log' // error log
 
+import 'lib-flexible'
+
 import * as filters from './filters' // global filters
+import { HappyScroll } from 'vue-happy-scroll'
+// 自定义组件名
+Vue.component('happy-scroll', HappyScroll)
+// 引入css
+import 'vue-happy-scroll/docs/happy-scroll.css'
 
 /**
  * If you don't want to use mock-server

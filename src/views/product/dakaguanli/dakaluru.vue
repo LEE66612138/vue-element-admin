@@ -1,12 +1,12 @@
 <template>
   <div>
     <div>
-      <div style="position:absolute; right:160px; top:15px">
+      <div style="float:right;margin-left:10px ">
         <router-link to="dakaliebiao">
           <el-button class="pan-btn yellow-btn">返回列表</el-button>
         </router-link>
       </div>
-      <div style="position:absolute; right:10px; top:15px">
+      <div style="float:right;margin-left:10px ">
         <button class="pan-btn light-blue-btn" @click="publish()">保存录入</button>
       </div>
     </div>
@@ -173,14 +173,17 @@ export default {
     }
   },
   created() {
-    this.$axios.post(process.env.VUE_APP_BASE_API + '/api/man/v1/lable/queryList', { categoryType: 5 }).then(response => {
-      this.industryNameList = response.data.data
-    }).catch(error => {
-      console.log(error)
-      alert('网络错误，不能访问')
-    })
+    this.getIndustryNameList()
   },
   methods: {
+    getIndustryNameList() {
+      this.$axios.post(process.env.VUE_APP_BASE_API + '/api/man/v1/lable/queryList', { categoryType: 5 }).then(response => {
+        this.industryNameList = response.data.data
+      }).catch(error => {
+        console.log(error)
+        alert('网络错误，不能访问')
+      })
+    },
     selectThree() {
       if (this.listQuery.industryName.length > 3) {
         this.$message.error('最多选择三个选项')

@@ -1,11 +1,11 @@
 <template>
   <div>
-    <div style="position:absolute; right:150px; top:15px">
+    <div style="float:right;margin-left:10px ">
       <router-link to="kechengliebiao">
         <el-button type="primary">返回列表</el-button>
       </router-link>
     </div>
-    <div style="position:absolute; right:10px; top:15px">
+    <div style="float:right;margin-left:10px ">
       <el-button type="primary" @click="publish()">课程发布</el-button>
     </div>
     <form action="">
@@ -24,8 +24,8 @@
       <div>
         <span style="color:red">*</span>
         <span>所属大咖 :</span>
-        <el-select v-model="listQuery.broadcaster" style="display:inline-block" @change="selectBroadcaster">
-          <el-option v-for="item in broadcasterList" :key="item.no" :label="item.nickName" :value="item.no" />
+        <el-select v-model="listQuery.broadcaster" style="display:inline-block">
+          <el-option v-for="item in broadcasterList" :key="item.no" :label="item.nickName" :value="item.nickName" />
         </el-select>
       </div>
       <br>
@@ -46,16 +46,18 @@
         <span style="color:red">*</span>
         <span>课程类型 :</span>
         <template>
-          <el-radio v-model="listQuery.courseType" label="1">音频</el-radio>
-          <el-radio v-model="listQuery.courseType" label="2">视频</el-radio>
+          <el-radio-group v-model="listQuery.courseType">
+            <el-radio :label="1">音频</el-radio>
+            <el-radio :label="2">视频</el-radio>
+          </el-radio-group>
         </template>
       </div>
       <br>
       <div>
         <span style="color:red">*</span>
         <span>课程版块 :</span>
-        <el-select v-model="listQuery.categoryName" style="display:inline-block" @change="selectCategoryName">
-          <el-option v-for="item in categoryNameList" :key="item.no" :label="item.categoryName" :value="item.no" />
+        <el-select v-model="listQuery.categoryName" style="display:inline-block">
+          <el-option v-for="item in categoryNameList" :key="item.no" :label="item.categoryName" :value="item.categoryName" />
         </el-select>
         <el-input v-model="newCategoryName" size="small" style="display:inline-block;width:200px;margin-left:50px" />
         <el-button size="mini" @click="addNewTag">添加标签</el-button>
@@ -64,13 +66,13 @@
       <div>
         <span style="color:red">*</span>
         <span>课程价格 :</span>
-        <el-radio v-model="listQuery.currencyType" label="0" @change="addPrice">公益</el-radio>
-        <el-radio v-model="listQuery.currencyType" label="1" @change="addPrice">答币</el-radio>
-        <el-radio v-model="listQuery.currencyType" label="2" @change="addPrice">答贝</el-radio>
+        <el-radio-group v-model="listQuery.currencyType" @change="addPrice">
+          <el-radio :label="0">公益</el-radio>
+          <el-radio :label="1">答币</el-radio>
+          <el-radio :label="2">答贝</el-radio>
+        </el-radio-group>
         <input
-          v-show="PriceIsShow"
           v-model="listQuery.price"
-          type="number"
           style="display:inline-block;width:100px"
         >
       </div>
@@ -78,13 +80,12 @@
       <div>
         <span style="color:red">*</span>
         <span>课时数量 :</span>
-        <el-radio v-model="listQuery.publishType" label="0" @change="publishTypeChoice">无限制</el-radio>
-        <el-radio v-model="listQuery.publishType" label="1" @change="publishTypeChoice">有限制</el-radio>
+        <el-radio-group v-model="listQuery.publishType" @change="publishTypeChoice">
+          <el-radio :label="0">无限制</el-radio>
+          <el-radio :label="1">有限制</el-radio>
+        </el-radio-group>
         <input
-          v-show="publishTypeIsShow"
           v-model="listQuery.classTotalNum"
-          type="number"
-          min="1"
           style="display:inline-block;width:100px"
         >
       </div>
@@ -141,8 +142,6 @@ export default {
       publishTypeIsShow: false,
       listQuery: {
         no: this.$route.query.no,
-        categoryNo: this.$route.query.categoryNo,
-        expertNo: this.$route.query.expertNo,
         courseTitle: this.$route.query.courseTitle,
         broadcaster: this.$route.query.broadcaster,
         courseAbstract: this.$route.query.courseAbstract,
@@ -163,22 +162,6 @@ export default {
     this.getCategoryNameList()
   },
   methods: {
-    selectCategoryName(vId) {
-      let obj = {}
-      obj = this.categoryNameList.find((item) => {
-        return item.no === vId
-      })
-      this.listQuery.categoryName = obj.categoryName
-      this.listQuery.categoryNo = obj.no
-    },
-    selectBroadcaster(vId) {
-      let obj = {}
-      obj = this.broadcasterList.find((item) => {
-        return item.no === vId
-      })
-      this.listQuery.broadcaster = obj.nickName
-      this.listQuery.expertNo = obj.no
-    },
     getBroadcasterList() {
       this.$axios.post(process.env.VUE_APP_BASE_API + '/api/man/v1/expert/expertPage', { categoryType: 1 }).then(response => {
         this.broadcasterList = response.data.data
@@ -197,8 +180,8 @@ export default {
     },
     addPrice() {
       this.PriceIsShow = false
-      if (this.listQuery.currencyType !== '0') {
-        this.PriceIsShow = true
+      if (this.listQuery.currencyType === 0) {
+        this.listQuery.price = '0'
       }
     },
     addNewTag() {
@@ -210,9 +193,10 @@ export default {
       this.newCategoryName = ''
     },
     publishTypeChoice() {
-      this.publishTypeIsShow = false
-      if (this.listQuery.publishType !== '0') {
-        this.publishTypeIsShow = true
+      if (this.listQuery.publishType === 0) {
+        this.listQuery.classTotalNum = '无限制'
+      } else {
+        this.listQuery.classTotalNum = '1'
       }
     },
     changeMainImg(file) {

@@ -3,19 +3,19 @@
     <h1 style="color:black">课程管理</h1>
     <br>
     <div style="margin-left:50px">
-      <div style="display:inline-block; margin-right:150px">
+      <div style="display:inline-block; margin-right:50px">
         <span>上架人员</span>
         <el-select v-model="listQuery.putawayUserNo" style="display:inline-block" @change="handleFilter()">
-          <el-option v-for="item in select('putawayUserName')" :key="item.putawayUserNo" :label="item.putawayUserName" :value="item.putawayUserNo" />
+          <el-option v-for="item in putawayUserNameList" :key="item.no" :label="item.nickName" :value="item.no" />
         </el-select>
       </div>
-      <div style="display:inline-block; margin-right:150px">
+      <div style="display:inline-block; margin-right:50px">
         <span>所属大咖 :</span>
         <el-select v-model="listQuery.expertNo" style="display:inline-block" @change="handleFilter()">
           <el-option v-for="item in broadcasterList" :key="item.no" :label="item.nickName" :value="item.no" />
         </el-select>
       </div>
-      <div style="display:inline-block; margin-right:150px">
+      <div style="display:inline-block; margin-right:50px">
         <span>课程版块 :</span>
         <el-select v-model="listQuery.courseTitle" style="display:inline-block" @change="handleFilter()">
           <el-option v-for="item in categoryNameList" :key="item.categoryName" :label="item.categoryName" :value="item.categoryName" />
@@ -44,7 +44,6 @@
           :data="list"
           style="width: 100%;"
         >
-          <el-table-column type="selection" width="45px" />
           <el-table-column label="ID" prop="id" align="center" width="50px" :show-overflow-tooltip="true">
             <template slot-scope="scope">
               <span>{{ scope.row.no }}</span>
@@ -82,7 +81,7 @@
           </el-table-column>
           <el-table-column label="发布类型" align="center" width="100px">
             <template slot-scope="scope">
-              <el-tag :type="scope.row.classUpdateNum/scope.row.classTotalNum | statusFilter">
+              <el-tag :type="scope.row.classUpdateNum/scope.row.classTotalNum | publishFilter">
                 {{ scope.row.classUpdateNum/scope.row.classTotalNum == '1'?'已完结':'连载中' }}
               </el-tag>
             </template>
@@ -116,10 +115,10 @@
                   课时管理
                 </el-button>
               </router-link>
-              <el-button v-if="scope.row.status!='1'" type="success" align="center" @click="handleModifyStatus(scope.row,'1')">
+              <el-button v-if="scope.row.status!=1" type="success" align="center" @click="handleModifyStatus(scope.row,'1')">
                 上架
               </el-button>
-              <el-button v-if="scope.row.status!='0'" align="center" @click="handleModifyStatus(scope.row,'0')">
+              <el-button v-if="scope.row.status!=0" align="center" @click="handleModifyStatus(scope.row,'0')">
                 下架
               </el-button>
             </template>
@@ -139,7 +138,17 @@ export default {
   components: { Pagination },
   filters: {
     statusFilter(status) {
-      if (status < 1) {
+      if (status !== 0) {
+        status = 1
+      }
+      const statusMap = {
+        0: 'info',
+        1: 'success'
+      }
+      return statusMap[status]
+    },
+    publishFilter(status) {
+      if (status !== 1) {
         status = 0
       }
       const statusMap = {
@@ -186,7 +195,7 @@ export default {
       })
     },
     getPutawayUserNameList() {
-      this.$axios.post(process.env.VUE_APP_BASE_API + '/api/man/v1/course/coursePage', {}).then(response => {
+      this.$axios.post(process.env.VUE_APP_BASE_API + '/api/man/v1/basic/manager/managerList', {}).then(response => {
         this.putawayUserNameList = response.data.data
       }).catch(error => {
         console.log(error)
@@ -213,28 +222,6 @@ export default {
       this.listQuery.page = 1
       this.getList()
     },
-    select(p, l) {
-      // console.log(this.list)
-      const newArr = []
-      for (var i = 0; i < this[l].length; i++) {
-        if (newArr.indexOf(this[l][i][p]) === -1) {
-          newArr.push(this[l][i])
-        }
-      }
-      return newArr
-    },
-    // selectOne(p, l) {
-    //   const newArr = []
-    //   for (let i = 0; i < this.slist.length; i++) {
-    //     if (this.slist[i][p] === this[p]) {
-    //       newArr.push(this.slist[i])
-    //     }
-    //   }
-    //   this.slist = newArr
-    //   this.putawayUserNameList = this.select('putawayUserName')
-    //   this.broadcasterList = this.select('broadcaster')
-    //   this.categoryNameList = this.select('categoryName')
-    // },
     timestampToTime(row, column) {
       var date = new Date(row.putawayTime)
       var Y = date.getFullYear() + '-'
@@ -247,7 +234,6 @@ export default {
     },
     handleModifyStatus(row, status) {
       this.$axios.post(process.env.VUE_APP_BASE_API + '/api/man/v1/course/putawayCourse', { no: row.no }).then(response => {
-        console.log(response.data.code)
         if (response.data.code === 200) {
           row.status = status
           this.$message({

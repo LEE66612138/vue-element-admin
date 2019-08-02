@@ -1,11 +1,11 @@
 <template>
   <div>
-    <div style="position:absolute; right:160px; top:15px">
+    <div style="float:right;margin-left:10px ">
       <router-link to="kechengliebiao">
         <el-button class="pan-btn yellow-btn">返回列表</el-button>
       </router-link>
     </div>
-    <div style="position:absolute; right:10px; top:15px">
+    <div style="float:right;margin-left:10px ">
       <button class="pan-btn light-blue-btn" @click="publish()">课时发布</button>
     </div>
     <div style="display：inline-block; float:left">
@@ -25,7 +25,6 @@
         v-model="listQuery.sortNum"
         style="display:inline-block;width:400px"
         size="medium"
-        maxlength="30"
       />
     </div>
     <div style="clear:both" />
@@ -94,7 +93,7 @@ export default {
       listQuery: {
         courseNo: this.$route.query.no,
         unitTitle: '',
-        sortNum: this.$route.query.listLength + 1,
+        sortNum: this.$route.query.total + 1,
         duration: '',
         fileSize: '',
         fileUrl: '',
@@ -169,7 +168,4 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  *{
-    font-size: 17px;
-  }
 </style>

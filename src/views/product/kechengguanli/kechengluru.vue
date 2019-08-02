@@ -1,12 +1,12 @@
 <template>
   <div>
-    <div style="position:absolute; right:160px; top:15px">
+    <div style="float:right;margin-left:10px ">
+      <el-button type="primary" @click="publish">课程发布</el-button>
+    </div>
+    <div style="float:right;margin-left:10px ">
       <router-link to="kechengliebiao">
         <el-button type="primary">返回列表</el-button>
       </router-link>
-    </div>
-    <div style="position:absolute; right:10px; top:15px">
-      <el-button type="primary" @click="publish">课程发布</el-button>
     </div>
     <form action="">
       <div>
@@ -24,8 +24,8 @@
       <div>
         <span style="color:red">*</span>
         <span>所属大咖 :</span>
-        <el-select v-model="listQuery.broadcaster" style="display:inline-block" @change="selectBroadcaster">
-          <el-option v-for="item in broadcasterList" :key="item.no" :label="item.nickName" :value="item.no" />
+        <el-select v-model="listQuery.broadcaster" style="display:inline-block">
+          <el-option v-for="item in broadcasterList" :key="item.no" :label="item.nickName" :value="item.nickName" />
         </el-select>
       </div>
       <br>
@@ -54,8 +54,8 @@
       <div>
         <span style="color:red">*</span>
         <span>课程版块 :</span>
-        <el-select v-model="listQuery.categoryName" style="display:inline-block" @change="selectCategoryName">
-          <el-option v-for="item in categoryNameList" :key="item.no" :label="item.categoryName" :value="item.no" />
+        <el-select v-model="listQuery.categoryName" style="display:inline-block">
+          <el-option v-for="item in categoryNameList" :key="item.no" :label="item.categoryName" :value="item.categoryName" />
         </el-select>
         <el-input v-model="newCategoryName" size="small" style="display:inline-block;width:200px;margin-left:50px" />
         <el-button size="mini" @click="addNewTag">添加标签</el-button>
@@ -83,8 +83,6 @@
         <input
           v-show="publishTypeIsShow"
           v-model="listQuery.classTotalNum"
-          type="number"
-          min="1"
           style="display:inline-block;width:100px"
         >
       </div>
@@ -140,8 +138,6 @@ export default {
       addTagIsShow: false,
       publishTypeIsShow: false,
       listQuery: {
-        categoryNo: '',
-        expertNo: '',
         courseTitle: '',
         broadcaster: '',
         courseAbstract: '',
@@ -150,7 +146,7 @@ export default {
         currencyType: '0',
         price: '0',
         publishType: '0',
-        classTotalNum: '0',
+        classTotalNum: '无限制',
         mainImgUrl: '',
         headImgUrl: '',
         status: '0'
@@ -162,22 +158,22 @@ export default {
     this.getCategoryNameList()
   },
   methods: {
-    selectCategoryName(vId) {
-      let obj = {}
-      obj = this.categoryNameList.find((item) => {
-        return item.no === vId
-      })
-      this.listQuery.categoryName = obj.categoryName
-      this.listQuery.categoryNo = obj.no
-    },
-    selectBroadcaster(vId) {
-      let obj = {}
-      obj = this.broadcasterList.find((item) => {
-        return item.no === vId
-      })
-      this.listQuery.broadcaster = obj.nickName
-      this.listQuery.expertNo = obj.no
-    },
+    // selectCategoryName(vId) {
+    //   let obj = {}
+    //   obj = this.categoryNameList.find((item) => {
+    //     return item.no === vId
+    //   })
+    //   this.listQuery.categoryName = obj.categoryName
+    //   this.listQuery.categoryNo = obj.no
+    // },
+    // selectBroadcaster(vId) {
+    //   let obj = {}
+    //   obj = this.broadcasterList.find((item) => {
+    //     return item.no === vId
+    //   })
+    //   this.listQuery.broadcaster = obj.nickName
+    //   this.listQuery.expertNo = obj.no
+    // },
     getBroadcasterList() {
       this.$axios.post(process.env.VUE_APP_BASE_API + '/api/man/v1/expert/expertPage', {}).then(response => {
         this.broadcasterList = response.data.data
@@ -223,6 +219,7 @@ export default {
       this.publishTypeIsShow = false
       if (this.listQuery.publishType !== '0') {
         this.publishTypeIsShow = true
+        this.listQuery.classTotalNum = ''
       }
     },
     changeMainImg(file) {

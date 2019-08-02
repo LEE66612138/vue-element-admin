@@ -1,10 +1,10 @@
 <template>
   <div style="padding:30px;">
-    <el-alert
+    <!-- <el-alert
       :closable="false"
       title=""
-    >
-      <router-view />
-    </el-alert>
+    > -->
+    <router-view />
+    <!-- </el-alert> -->
   </div>
 </template>
